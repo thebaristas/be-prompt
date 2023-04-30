@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class DragAndDrop : MonoBehaviour
 {
+    public int id {get; set;}
     // Event handler for when a card is dropped on a character
     public delegate void OnDropDelegate(GameObject gameObject);
     public static event OnDropDelegate OnDropEvent;
@@ -18,21 +19,21 @@ public class DragAndDrop : MonoBehaviour
         initialPosition = transform.position;
     }
 
-    void OnMouseEnter() {
-        if (!GameManager.Instance.cardSelected) {
-            transform.position = transform.position + new Vector3(0,1,0);
+    void OnMouseOver() {
+        if (GameManager.Instance.cardSelected == -1) {
+            transform.position = Vector3.Lerp(transform.position, initialPosition + new Vector3(0,1,0), 10.0f * Time.deltaTime);
         }
     }
 
     void OnMouseExit() {
-        if (!GameManager.Instance.cardSelected) {
+        if (GameManager.Instance.cardSelected == -1) {
             transform.position = initialPosition;
         }
     }
 
     void OnMouseDown()
     {
-        GameManager.Instance.cardSelected = true;
+        GameManager.Instance.cardSelected = id;
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mOffset = gameObject.transform.position - GetMouseWorldPos();
         isDragging = true;
@@ -72,7 +73,7 @@ public class DragAndDrop : MonoBehaviour
         isDragging = false;
         transform.position = initialPosition;
         GameManager.SetLayerRecursively(this.gameObject, "UI", sortingOrder);
-        GameManager.Instance.cardSelected = false;
+        GameManager.Instance.cardSelected = -1;
     }
 
     void Update()

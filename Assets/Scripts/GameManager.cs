@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public Transform[] actorsSpawnPositions;
     public Transform cardsLeft;
     public Transform cardsRight;
-    public bool cardSelected {get; set;}
+    public int cardSelected {get; set;} = -1;
 
     public Timeline timeline;
 
