@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Event delegate for when a card should be said
-public delegate void OnCardDisplayDelegate(string actorId, string cardId, bool isMissing);
+public delegate void OnCardDisplayDelegate(string actorId, string cardSpriteId, bool isMissing);
 // Event delegate for when an object is missed
 public delegate void OnObjectMissedDelegate();
 
@@ -119,12 +119,12 @@ public class Timeline : MonoBehaviour
       if (!elementToGameObject.ContainsKey(i))
       {
         // Create a new game object
-        var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardId}");
+        var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
         var gameObjectPrefab = Resources.Load<Card>(ResourcePaths.Card);
         var gameObject = Instantiate(gameObjectPrefab);
         gameObject.spriteRenderer.sprite = sprite;
         // Set the name of the game object to the index and emoji code
-        gameObject.name = i + "_" + item.cardId;
+        gameObject.name = i + "_" + item.cardSpriteId;
         // Make sr a child of this game object
         gameObject.transform.parent = transform;
         // Add the game object to the dictionary
@@ -136,7 +136,7 @@ public class Timeline : MonoBehaviour
       if (elementTime < elapsedTime - timelineTotalDuration / 2.0f)
       {
         if (!item.displayed) {
-          OnCardDisplay.Invoke(item.actorId, item.cardId, item.isMissing);
+          OnCardDisplay.Invoke(item.actorId, item.cardSpriteId, item.isMissing);
           item.displayed = true;
         }
         if (!waitingForHint && item.isMissing) {
@@ -204,7 +204,7 @@ public class Timeline : MonoBehaviour
     {
       return "";
     }
-    return script.items[hintIndex].cardId;
+    return script.items[hintIndex].cardSpriteId;
   }
 
   float GetTimelinePosition(float time)

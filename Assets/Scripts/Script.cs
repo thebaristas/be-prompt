@@ -5,14 +5,14 @@ using UnityEngine;
 [System.Serializable]
 public class ScriptItem {
     public float delay; // in seconds
-    public string cardId;
+    public string cardSpriteId;
     public string actorId;
     public bool isMissing;
     public bool displayed = false;
 
-    public ScriptItem(string cardId, string actorId, bool isMissing = false, float delay = 1.0f) {
+    public ScriptItem(string cardSpriteId, string actorId, bool isMissing = false, float delay = 1.0f) {
         this.delay = delay;
-        this.cardId = cardId;
+        this.cardSpriteId = cardSpriteId;
         this.actorId = actorId;
         this.isMissing = isMissing;
     }

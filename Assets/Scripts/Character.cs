@@ -20,14 +20,14 @@ public class Character : MonoBehaviour
         Debug.Log($"Dropped on character {gameObject.name}");
     }
 
-    public void HandleCardDisplay(string actorId, string cardId, bool isMissing) {
+    public void HandleCardDisplay(string actorId, string cardSpriteId, bool isMissing) {
         if (actorId != id) {
             bubble.Hide();
         } else {
             if (isMissing) {
                 bubble.Display(ResourcePaths.QuestionMarkSprite);
             } else {
-                bubble.Display($"{ResourcePaths.CardSprites}/{cardId}");
+                bubble.Display($"{ResourcePaths.CardSprites}/{cardSpriteId}");
             }
         }
     }

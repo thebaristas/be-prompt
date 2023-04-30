@@ -26,8 +26,8 @@ public class Bubble : MonoBehaviour
         }
     }
 
-    public void Display(string resourcePath) {
-        Sprite sprite = Resources.Load<Sprite>(resourcePath);
+    public void Display(string spriteResourcePath) {
+        Sprite sprite = Resources.Load<Sprite>(spriteResourcePath);
         if (sprite) {
             spriteRenderer.sprite = sprite;
         }
