@@ -2,10 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Event delegate for when a card should be said
+public delegate void OnCardDisplayDelegate(string actorId, string cardId);
+// Event delegate for when an object is missed
+public delegate void OnObjectMissedDelegate();
+
 public class Timeline : MonoBehaviour
 {
-  // Event delegate for when an object is missed
-  public delegate void OnObjectMissedDelegate();
+
+  // Event for when an card should be said
+  public event OnCardDisplayDelegate OnCardDisplay;
 
   // Event for when an object is missed
   public event OnObjectMissedDelegate OnObjectMissed;

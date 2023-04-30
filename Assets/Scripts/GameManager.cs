@@ -161,4 +161,8 @@ public class GameManager : MonoBehaviour
         }
         return depth;
     }
+
+    public void SubscribeToCardDisplayEvents(OnCardDisplayDelegate callback) {
+        timeline.OnCardDisplay += callback;
+    }
 }
