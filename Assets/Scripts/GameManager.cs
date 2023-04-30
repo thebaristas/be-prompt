@@ -58,10 +58,12 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Shuffle the spawn positions indices to prevent actors from spawning in the same position
+        var randomIndices = getRandomIndices(actorsSpawnPositions.Length);
+
         for (int i = 0; i < numberOfActors; i++) {
             GameObject prefabToSpawn = actorsPrefabs[i];
-            int randomIndex = Random.Range(0, actorsSpawnPositions.Length);
-            GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndex].position, Quaternion.identity);
+            GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndices[i]].position, Quaternion.identity);
         }
 
         float startX = -(numberOfCards / 2) * spacing;
@@ -81,6 +83,20 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    int[] getRandomIndices(int count) {
+        int[] indices = new int[count];
+        for (int i = 0; i < count; i++) {
+            indices[i] = i;
+        }
+        for (int i = 0; i < indices.Length; i++) {
+            int temp = indices[i];
+            int randomIndex = Random.Range(i, indices.Length);
+            indices[i] = indices[randomIndex];
+            indices[randomIndex] = temp;
+        }
+        return indices;
     }
 }
