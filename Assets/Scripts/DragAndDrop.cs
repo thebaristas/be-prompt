@@ -15,7 +15,9 @@ public class DragAndDrop : MonoBehaviour
     }
 
     void OnMouseEnter() {
-        transform.position = transform.position + new Vector3(0,1,0);
+        if (!GameManager.Instance.cardSelected) {
+            transform.position = transform.position + new Vector3(0,1,0);
+        }
     }
 
     void OnMouseExit() {
@@ -24,6 +26,7 @@ public class DragAndDrop : MonoBehaviour
 
     void OnMouseDown()
     {
+        GameManager.Instance.cardSelected = true;
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mOffset = gameObject.transform.position - GetMouseWorldPos();
         isDragging = true;
@@ -63,6 +66,7 @@ public class DragAndDrop : MonoBehaviour
         isDragging = false;
         transform.position = initialPosition;
         GameManager.SetLayerRecursively(this.gameObject, "UI", sortingOrder);
+        GameManager.Instance.cardSelected = false;
     }
 
     void Update()

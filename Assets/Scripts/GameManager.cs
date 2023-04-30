@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public Transform[] actorsSpawnPositions;
     public Transform cardsLeft;
     public Transform cardsRight;
+    public bool cardSelected {get; set;}
 
     // Static reference to the instance of the singleton class
     private static GameManager instance;
@@ -73,13 +74,14 @@ public class GameManager : MonoBehaviour
         {
             startX += cardsSpacing / 2;
         }
+        int order = 0;
         for (int i = 0; i < numberOfCards; i++) {
             int randomIndex = Random.Range(0, cardsPrefabs.Length);
             GameObject prefabToSpawn = cardsPrefabs[randomIndex];
             float xPos = startX + i * cardsSpacing;
             Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
-            SetLayerRecursively(spawnedPrefab, "UI", i);
+            order = SetLayerRecursively(spawnedPrefab, "UI", order);
         }
     }
 
@@ -103,16 +105,18 @@ public class GameManager : MonoBehaviour
         return indices;
     }
 
-    public static void SetLayerRecursively(GameObject obj, string layerName, int layerSortingOrder)
+    public static int SetLayerRecursively(GameObject obj, string layerName, int layerSortingOrder)
     {
         Renderer renderer = obj.GetComponent<Renderer>();
         if (renderer != null) {
             renderer.sortingLayerName = layerName;
             renderer.sortingOrder = layerSortingOrder;
         }
+        int depth = layerSortingOrder + 1;
         foreach (Transform child in obj.transform)
         {
-            SetLayerRecursively(child.gameObject, layerName, layerSortingOrder);
+            depth = SetLayerRecursively(child.gameObject, layerName, layerSortingOrder + 1);
         }
+        return depth;
     }
 }
