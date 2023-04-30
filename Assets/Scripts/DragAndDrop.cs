@@ -14,6 +14,14 @@ public class DragAndDrop : MonoBehaviour
         initialPosition = transform.position;
     }
 
+    void OnMouseEnter() {
+        transform.position = transform.position + new Vector3(0,1,0);
+    }
+
+    void OnMouseExit() {
+        transform.position = initialPosition;
+    }
+
     void OnMouseDown()
     {
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
