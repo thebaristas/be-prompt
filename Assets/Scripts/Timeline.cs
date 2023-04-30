@@ -40,16 +40,13 @@ public class Timeline : MonoBehaviour
   // start time
   public float initialDelay = 0.0f; // in seconds
 
+  // TODO: Extract list of emoji codes and player IDs from the scrip
+  public string[] cardIds = { "0", "1", "2" };
+
   // Start is called before the first frame update
   void Start()
   {
-    // TODO: Extract list of emoji codes and player IDs from the script
-
     // Create a list with all the emoji codes
-    var cardIds = new List<string>();
-    cardIds.Add("0");
-    cardIds.Add("1");
-    cardIds.Add("2");
     // Create a list with all actors Ids
     var actorsIds = new List<string>();
     actorsIds.Add("Character_0");
@@ -66,7 +63,7 @@ public class Timeline : MonoBehaviour
     for (int i = 0; i < 100; ++i)
     {
       // Choose a random emoji code and player ID
-      var cardId = cardIds[Random.Range(0, cardIds.Count)];
+      var cardId = cardIds[Random.Range(0, cardIds.Length)];
       var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
       // Get a random isMissing value with a probability of .3 of being true
       var isMissing = Random.Range(0.0f, 1.0f) < .2f;

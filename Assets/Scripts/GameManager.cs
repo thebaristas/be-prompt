@@ -7,7 +7,6 @@ using System.IO;
 public class GameManager : MonoBehaviour
 {
   public int numberOfActors = 2;
-  public int numberOfCards = 8;
   public Transform[] actorsSpawnPositions;
   public Transform cardsLeft;
   public Transform cardsRight;
@@ -82,8 +81,6 @@ public class GameManager : MonoBehaviour
       actorsPrefabs.Add(file.Name.Replace(".prefab", ""), actorPrefab);
     }
 
-    Sprite[] cardSprites = Resources.LoadAll<Sprite>(ResourcePaths.CardSprites);
-
     // Shuffle the spawn positions indices to prevent actors from spawning in the same position
     var randomIndices = getRandomIndices(actorsSpawnPositions.Length);
 
@@ -101,6 +98,7 @@ public class GameManager : MonoBehaviour
       }
     }
 
+    int numberOfCards = timeline.cardIds.Length;
     float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
     float startX = -(numberOfCards / 2) * cardsSpacing;
     if (numberOfCards % 2 == 0)
@@ -112,16 +110,14 @@ public class GameManager : MonoBehaviour
     int order = 0;
     for (int i = 0; i < numberOfCards; i++)
     {
-        // Get a random sprite from the card sprites
-        int randomIndex = Random.Range(0, cardSprites.Length);
-        Sprite randomSprite = cardSprites[randomIndex];
+        Sprite cardSprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{timeline.cardIds[i]}"); ;
 
         float xPos = startX + i * cardsSpacing;
         Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
         Card spawnedPrefab = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
 
-        spawnedPrefab.name = randomSprite.name;
-        spawnedPrefab.spriteRenderer.sprite = randomSprite;
+        spawnedPrefab.name = cardSprite.name;
+        spawnedPrefab.spriteRenderer.sprite = cardSprite;
         spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
         order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
     }
