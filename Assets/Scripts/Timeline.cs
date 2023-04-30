@@ -46,15 +46,15 @@ public class Timeline : MonoBehaviour
   void Start()
   {
     // Create a list with all the emoji codes
-    var emojiCodes = new List<string>();
-    emojiCodes.Add("smile");
-    emojiCodes.Add("heart");
-    emojiCodes.Add("cup");
-    // Create a list with all player IDs
-    var playerIDs = new List<string>();
-    playerIDs.Add("player1");
-    playerIDs.Add("player2");
-    playerIDs.Add("player3");
+    var cardIds = new List<string>();
+    cardIds.Add("smile");
+    cardIds.Add("heart");
+    cardIds.Add("cup");
+    // Create a list with all actors Ids
+    var actorsIds = new List<string>();
+    actorsIds.Add("player1");
+    actorsIds.Add("player2");
+    actorsIds.Add("player3");
     // Create a test script with test items
     script = new Script();
     script.items = new List<ScriptItem>();
@@ -66,12 +66,12 @@ public class Timeline : MonoBehaviour
     for (int i = 0; i < 100; ++i)
     {
       // Choose a random emoji code and player ID
-      var emojiCode = emojiCodes[Random.Range(0, emojiCodes.Count)];
-      var playerID = playerIDs[Random.Range(0, playerIDs.Count)];
+      var cardId = cardIds[Random.Range(0, cardIds.Count)];
+      var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
       // Get a random isMissing value with a probability of .3 of being true
       var isMissing = Random.Range(0.0f, 1.0f) < .2f;
       // Add a new script item
-      script.items.Add(new ScriptItem(emojiCode, playerID, isMissing));
+      script.items.Add(new ScriptItem(cardId, actorId, isMissing));
     }
 
     elapsedTime = -initialDelay;
@@ -142,10 +142,10 @@ public class Timeline : MonoBehaviour
       if (!elementToGameObject.ContainsKey(i))
       {
         // Create a new game object
-        var sprite = Resources.Load<Sprite>("emojis/" + item.emojiCode);
+        var sprite = Resources.Load<Sprite>("emojis/" + item.cardId);
         var gameObject = new GameObject();
         // Set the name of the game object to the index and emoji code
-        gameObject.name = i + "_" + item.emojiCode;
+        gameObject.name = i + "_" + item.cardId;
         var sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
         // Make sr a child of this game object
@@ -200,7 +200,7 @@ public class Timeline : MonoBehaviour
     {
       return "";
     }
-    return script.items[hintIndex].emojiCode;
+    return script.items[hintIndex].cardId;
   }
 
   float GetTimelinePosition(float time)

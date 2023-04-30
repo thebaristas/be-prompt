@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ScriptItem {
     public float delay; // in seconds
-    public string emojiCode;
-    public string characterID;
+    public string cardId;
+    public string actorId;
     public bool isMissing;
 
-    public ScriptItem(string emojiCode, string characterID, bool isMissing = false, float delay = 1.0f) {
+    public ScriptItem(string cardId, string actorId, bool isMissing = false, float delay = 1.0f) {
         this.delay = delay;
-        this.emojiCode = emojiCode;
-        this.characterID = characterID;
+        this.cardId = cardId;
+        this.actorId = actorId;
         this.isMissing = isMissing;
     }
 }
