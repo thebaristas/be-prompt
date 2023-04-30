@@ -779,6 +779,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3678696415074660294, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.74999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 3678696415242644239, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 3678696415815960324, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.74999994
+      objectReference: {fileID: 0}
+    - target: {fileID: 3678696416548459419, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.7699999
+      objectReference: {fileID: 0}
     - target: {fileID: 7013882605680959762, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
       propertyPath: m_Name
       value: GameManager
