@@ -31,7 +31,7 @@ public class Timeline : MonoBehaviour
   float lastVisibleIndexTime = 0.0f; // in seconds
 
   // Dictionary from element ID to game object, to track which game objects are currently visible.
-  Dictionary<int, GameObject> elementToGameObject = new Dictionary<int, GameObject>();
+  Dictionary<int, Card> elementToGameObject = new Dictionary<int, Card>();
 
   public float timelineTotalDuration = 5.0f; // in seconds
   public float hintTimerDuration = 3.0f; // in seconds
@@ -47,22 +47,22 @@ public class Timeline : MonoBehaviour
 
     // Create a list with all the emoji codes
     var cardIds = new List<string>();
-    cardIds.Add("Card");
-    cardIds.Add("Card");
-    cardIds.Add("Card");
+    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
+    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
+    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
     // Create a list with all actors Ids
     var actorsIds = new List<string>();
+    actorsIds.Add("Character_0");
     actorsIds.Add("Character_1");
     actorsIds.Add("Character_2");
-    actorsIds.Add("Character_3");
     // Create a test script with test items
     script = new Script();
     script.items = new List<ScriptItem>();
-    script.items.Add(new ScriptItem("Card", "Character_1"));
-    script.items.Add(new ScriptItem("Card", "Character_2", true));
-    script.items.Add(new ScriptItem("Card", "Character_3", false, .5f));
-    script.items.Add(new ScriptItem("Card", "Character_1"));
-    script.items.Add(new ScriptItem("Card", "Character_2"));
+    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_1"));
+    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_2", true));
+    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_0", false, .5f));
+    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_1"));
+    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_2"));
     for (int i = 0; i < 100; ++i)
     {
       // Choose a random emoji code and player ID
@@ -119,8 +119,10 @@ public class Timeline : MonoBehaviour
       if (!elementToGameObject.ContainsKey(i))
       {
         // Create a new game object
-        var gameObjectPrefab = Resources.Load<GameObject>("Cards/" + item.cardId);
+        var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardId}");
+        var gameObjectPrefab = Resources.Load<Card>(ResourcePaths.Card);
         var gameObject = Instantiate(gameObjectPrefab);
+        gameObject.spriteRenderer.sprite = sprite;
         // Set the name of the game object to the index and emoji code
         gameObject.name = i + "_" + item.cardId;
         // Make sr a child of this game object

@@ -27,10 +27,9 @@ public class Bubble : MonoBehaviour
     }
 
     public void Display(string resourcePath) {
-        GameObject prefab = Resources.Load<GameObject>(resourcePath);
-        SpriteRenderer cardSprite = prefab.GetComponent<SpriteRenderer>();
-        if (cardSprite) {
-            spriteRenderer.sprite = cardSprite.sprite;
+        Sprite sprite = Resources.Load<Sprite>(resourcePath);
+        if (sprite) {
+            spriteRenderer.sprite = sprite;
         }
         gameObject.SetActive(true);
         display = true;

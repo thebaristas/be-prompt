@@ -25,9 +25,9 @@ public class Character : MonoBehaviour
             bubble.Hide();
         } else {
             if (isMissing) {
-                bubble.Display("questionMark");
+                bubble.Display(ResourcePaths.QuestionMarkSprite);
             } else {
-                bubble.Display("Cards/" + cardId);
+                bubble.Display($"{ResourcePaths.CardSprites}/{cardId}");
             }
         }
     }

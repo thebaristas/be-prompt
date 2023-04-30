@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
   private int score = 0;
 
   Dictionary<string, GameObject> actorsPrefabs;
-  Dictionary<string, GameObject> cardsPrefabs;
+  Dictionary<string, GameObject> cardSprites;
 
   // Public getter for the singleton instance
   public static GameManager Instance
@@ -77,18 +77,12 @@ public class GameManager : MonoBehaviour
     foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Actors").GetFiles("*.prefab"))
     {
       // Load the actor prefab
-      var actorPrefab = Resources.Load<GameObject>("Actors/" + file.Name.Replace(".prefab", ""));
+      var actorPrefab = Resources.Load<GameObject>($"{ResourcePaths.Actors}/" + file.Name.Replace(".prefab", ""));
       // Add the actor prefab to the list of actors prefabs
       actorsPrefabs.Add(file.Name.Replace(".prefab", ""), actorPrefab);
     }
 
-    // Same for the cards
-    cardsPrefabs = new Dictionary<string, GameObject>();
-    foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Cards").GetFiles("*.prefab"))
-    {
-      var cardPrefab = Resources.Load<GameObject>("Cards/" + file.Name.Replace(".prefab", ""));
-      cardsPrefabs.Add(file.Name.Replace(".prefab", ""), cardPrefab);
-    }
+    Sprite[] cardSprites = Resources.LoadAll<Sprite>(ResourcePaths.CardSprites);
 
     // Shuffle the spawn positions indices to prevent actors from spawning in the same position
     var randomIndices = getRandomIndices(actorsSpawnPositions.Length);
@@ -113,17 +107,23 @@ public class GameManager : MonoBehaviour
     {
       startX += cardsSpacing / 2;
     }
+
+    Card cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
     int order = 0;
     for (int i = 0; i < numberOfCards; i++)
     {
-      // Get a random prefab from the cards prefabs
-      GameObject prefabToSpawn = cardsPrefabs["Card"];
-      float xPos = startX + i * cardsSpacing;
-      Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
-      GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
-      spawnedPrefab.name = $"Card_{i}";
-      spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
-      order = SetLayerRecursively(spawnedPrefab, "UI", order);
+        // Get a random sprite from the card sprites
+        int randomIndex = Random.Range(0, cardSprites.Length);
+        Sprite randomSprite = cardSprites[randomIndex];
+
+        float xPos = startX + i * cardsSpacing;
+        Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
+        Card spawnedPrefab = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
+
+        spawnedPrefab.name = randomSprite.name;
+        spawnedPrefab.spriteRenderer.sprite = randomSprite;
+        spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
+        order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
     }
   }
 
