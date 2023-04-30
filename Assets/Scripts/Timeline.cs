@@ -52,17 +52,17 @@ public class Timeline : MonoBehaviour
     cardIds.Add("Card");
     // Create a list with all actors Ids
     var actorsIds = new List<string>();
-    actorsIds.Add("Character");
-    actorsIds.Add("Character");
-    actorsIds.Add("Character");
+    actorsIds.Add("Character_1");
+    actorsIds.Add("Character_2");
+    actorsIds.Add("Character_3");
     // Create a test script with test items
     script = new Script();
     script.items = new List<ScriptItem>();
-    script.items.Add(new ScriptItem("Card", "Character"));
-    script.items.Add(new ScriptItem("Card", "Character", true));
-    script.items.Add(new ScriptItem("Card", "Character", false, .5f));
-    script.items.Add(new ScriptItem("Card", "Character"));
-    script.items.Add(new ScriptItem("Card", "Character"));
+    script.items.Add(new ScriptItem("Card", "Character_1"));
+    script.items.Add(new ScriptItem("Card", "Character_2", true));
+    script.items.Add(new ScriptItem("Card", "Character_3", false, .5f));
+    script.items.Add(new ScriptItem("Card", "Character_1"));
+    script.items.Add(new ScriptItem("Card", "Character_2"));
     for (int i = 0; i < 100; ++i)
     {
       // Choose a random emoji code and player ID
@@ -131,12 +131,18 @@ public class Timeline : MonoBehaviour
       }
       var obj = elementToGameObject[i];
       obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
-      if (!waitingForHint && item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
+      if (elementTime < elapsedTime - timelineTotalDuration / 2.0f)
       {
-        paused = true;
-        hintIndex = i;
-        waitingForHint = true;
-        hintTimer = hintTimerDuration;
+        if (!item.displayed) {
+          OnCardDisplay.Invoke(item.actorId, item.cardId, item.isMissing);
+          item.displayed = true;
+        }
+        if (!waitingForHint && item.isMissing) {
+          paused = true;
+          hintIndex = i;
+          waitingForHint = true;
+          hintTimer = hintTimerDuration;
+        }
       }
       elementTime += item.delay;
     }

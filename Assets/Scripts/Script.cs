@@ -8,6 +8,7 @@ public class ScriptItem {
     public string cardId;
     public string actorId;
     public bool isMissing;
+    public bool displayed = false;
 
     public ScriptItem(string cardId, string actorId, bool isMissing = false, float delay = 1.0f) {
         this.delay = delay;

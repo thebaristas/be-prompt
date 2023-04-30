@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 
-  bubble: {fileID: 0}
+  bubble: {fileID: 4552205117713500781}
 --- !u!70 &1163817635889975799
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

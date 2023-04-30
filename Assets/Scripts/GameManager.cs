@@ -97,7 +97,14 @@ public class GameManager : MonoBehaviour
     {
       GameObject prefabToSpawn = actorsPrefabs["Character"];
       GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndices[i]].position, Quaternion.identity);
-      spawnedPrefab.name = $"Character_{i}";
+      string id = $"Character_{i}";
+      spawnedPrefab.name = id;
+      Character character = spawnedPrefab.GetComponent<Character>();
+      if (character) {
+        character.id = id;
+      } else {
+        Debug.LogError($"No character component for {id}");
+      }
     }
 
     float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;

@@ -11,7 +11,6 @@ public class Bubble : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         initialScale = transform.localScale;
     }
 
@@ -19,13 +18,11 @@ public class Bubble : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float speed = 1.0f;
+        float speed = 10.0f;
         if (display) {
             transform.localScale = Vector3.Lerp(transform.localScale, initialScale, speed * Time.deltaTime);
-            gameObject.SetActive(true);
         } else {
             transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(0,0,0), speed * Time.deltaTime);
-            gameObject.SetActive(false);
         }
     }
 
@@ -35,10 +32,12 @@ public class Bubble : MonoBehaviour
         if (cardSprite) {
             spriteRenderer.sprite = cardSprite.sprite;
         }
+        gameObject.SetActive(true);
         display = true;
     }
 
     public void Hide() {
+        gameObject.SetActive(false);
         display = false;
     }
 }
