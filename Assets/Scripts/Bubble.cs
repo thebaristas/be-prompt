@@ -12,6 +12,7 @@ public class Bubble : MonoBehaviour
     void Start()
     {
         initialScale = transform.localScale;
+        transform.localScale = new Vector3(0,0,0);
     }
 
 
@@ -31,12 +32,10 @@ public class Bubble : MonoBehaviour
         if (sprite) {
             spriteRenderer.sprite = sprite;
         }
-        gameObject.SetActive(true);
         display = true;
     }
 
     public void Hide() {
-        gameObject.SetActive(false);
         display = false;
     }
 }
