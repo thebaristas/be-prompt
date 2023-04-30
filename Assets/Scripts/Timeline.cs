@@ -47,9 +47,9 @@ public class Timeline : MonoBehaviour
 
     // Create a list with all the emoji codes
     var cardIds = new List<string>();
-    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
-    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
-    cardIds.Add("336C65FB-0B66-444B-9268-238DA9A23B38");
+    cardIds.Add("0");
+    cardIds.Add("1");
+    cardIds.Add("2");
     // Create a list with all actors Ids
     var actorsIds = new List<string>();
     actorsIds.Add("Character_0");
@@ -58,11 +58,11 @@ public class Timeline : MonoBehaviour
     // Create a test script with test items
     script = new Script();
     script.items = new List<ScriptItem>();
-    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_1"));
-    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_2", true));
-    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_0", false, .5f));
-    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_1"));
-    script.items.Add(new ScriptItem("336C65FB-0B66-444B-9268-238DA9A23B38", "Character_2"));
+    script.items.Add(new ScriptItem("1", "Character_1"));
+    script.items.Add(new ScriptItem("2", "Character_2", true));
+    script.items.Add(new ScriptItem("0", "Character_0", false, .5f));
+    script.items.Add(new ScriptItem("1", "Character_1"));
+    script.items.Add(new ScriptItem("2", "Character_2"));
     for (int i = 0; i < 100; ++i)
     {
       // Choose a random emoji code and player ID
