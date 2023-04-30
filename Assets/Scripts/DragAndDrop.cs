@@ -89,9 +89,7 @@ public class DragAndDrop : MonoBehaviour
           if (character != null)
           {
             // Take the part of the gameObject name until the first underscore
-            string cardName = gameObject.name.Split('_')[0];
-            string actorName = character.name.Split('_')[0];
-            OnDropEvent(cardName, actorName);
+            OnDropEvent(gameObject.name, character.name);
             if (hoveredCharacter != null)
             {
               // Set the outline enabled shader property of the sprite material
