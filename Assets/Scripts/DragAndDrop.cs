@@ -30,6 +30,21 @@ public class DragAndDrop : MonoBehaviour
 
     void OnMouseUp()
     {
+        if (isDragging) {
+            // Check if the object is colliding with another object
+            Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position, transform.localScale, 0f);
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider != gameObject.GetComponent<Collider2D>())
+                {
+                    // Call a method on the other object
+                    Character character = collider.gameObject.GetComponent<Character>();
+                    if (character != null) {
+                        character.OnDrop(gameObject);
+                    }
+                }
+            }
+        }
         isDragging = false;
         transform.position = initialPosition;
     }

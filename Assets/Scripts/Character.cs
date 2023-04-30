@@ -15,4 +15,8 @@ public class Character : MonoBehaviour
     {
         
     }
+
+    public void OnDrop(GameObject gameObject) {
+        Debug.Log($"Dropped on character {gameObject.name}");
+    }
 }
