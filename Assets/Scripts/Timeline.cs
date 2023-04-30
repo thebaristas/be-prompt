@@ -120,7 +120,7 @@ public class Timeline : MonoBehaviour
     if (!paused)
     {
       // Update the elapsed time
-      elapsedTime += Time.deltaTime;
+      elapsedTime += scriptSpeed * Time.deltaTime;
     }
     // Update the first and last visible indices
     while (firstVisibleIndex < script.items.Count && firstVisibleIndexTime < elapsedTime - timelineTotalDuration)
