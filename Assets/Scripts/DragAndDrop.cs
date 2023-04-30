@@ -7,6 +7,7 @@ public class DragAndDrop : MonoBehaviour
 
     private bool isDragging = false;
     private Vector3 initialPosition;
+    private int sortingOrder;
 
     void Start()
     {
@@ -18,6 +19,12 @@ public class DragAndDrop : MonoBehaviour
         mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         mOffset = gameObject.transform.position - GetMouseWorldPos();
         isDragging = true;
+        Renderer renderer = this.gameObject.GetComponent<Renderer>();
+        if (renderer != null) {
+            sortingOrder = renderer.sortingOrder;
+        }
+        GameManager.SetLayerRecursively(this.gameObject, "Top", sortingOrder);
+        transform.position = transform.position + new Vector3(0,1,0);
     }
 
     void OnMouseDrag()
@@ -47,6 +54,7 @@ public class DragAndDrop : MonoBehaviour
         }
         isDragging = false;
         transform.position = initialPosition;
+        GameManager.SetLayerRecursively(this.gameObject, "UI", sortingOrder);
     }
 
     void Update()

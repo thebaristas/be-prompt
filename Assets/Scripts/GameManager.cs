@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] actorsPrefabs;
     public GameObject[] cardsPrefabs;
     public Transform[] actorsSpawnPositions;
-    public float spacing;
+    public Transform cardsLeft;
+    public Transform cardsRight;
 
     // Static reference to the instance of the singleton class
     private static GameManager instance;
@@ -64,17 +65,19 @@ public class GameManager : MonoBehaviour
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndex].position, Quaternion.identity);
         }
 
-        float startX = -(numberOfCards / 2) * spacing;
+        float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
+        float startX = -(numberOfCards / 2) * cardsSpacing;
         if (numberOfCards % 2 == 0)
         {
-            startX += spacing / 2;
+            startX += cardsSpacing / 2;
         }
         for (int i = 0; i < numberOfCards; i++) {
             int randomIndex = Random.Range(0, cardsPrefabs.Length);
             GameObject prefabToSpawn = cardsPrefabs[randomIndex];
-            float xPos = startX + i * spacing;
-            Vector3 spawnPos = new Vector3(xPos, 0, 0);
+            float xPos = startX + i * cardsSpacing;
+            Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+            SetLayerRecursively(spawnedPrefab, "UI", i);
         }
     }
 
@@ -82,5 +85,18 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public static void SetLayerRecursively(GameObject obj, string layerName, int layerSortingOrder)
+    {
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer != null) {
+            renderer.sortingLayerName = layerName;
+            renderer.sortingOrder = layerSortingOrder;
+        }
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layerName, layerSortingOrder);
+        }
     }
 }
