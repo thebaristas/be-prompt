@@ -62,13 +62,13 @@ public class DragAndDrop : MonoBehaviour
         if (hoveredCharacter != null)
         {
           // Set the outline enabled shader property of the sprite material
-          hoveredCharacter.GetComponent<SpriteRenderer>().material.SetInteger("_OutlineEnabled", 0);
+          hoveredCharacter.GetComponent<SpriteRenderer>().material.SetFloat("_OutlineEnabled", 0);
 
         }
         hoveredCharacter = newHoveredCharacter;
         if (hoveredCharacter != null)
         {
-          hoveredCharacter.GetComponent<SpriteRenderer>().material.SetInteger("_OutlineEnabled", 1);
+          hoveredCharacter.GetComponent<SpriteRenderer>().material.SetFloat("_OutlineEnabled", 1);
         }
       }
     }
@@ -95,7 +95,7 @@ public class DragAndDrop : MonoBehaviour
             if (hoveredCharacter != null)
             {
               // Set the outline enabled shader property of the sprite material
-              hoveredCharacter.GetComponent<SpriteRenderer>().material.SetInteger("_OutlineEnabled", 0);
+              hoveredCharacter.GetComponent<SpriteRenderer>().material.SetFloat("_OutlineEnabled", 0);
 
             }
             hoveredCharacter = null;
