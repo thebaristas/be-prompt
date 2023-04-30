@@ -5,7 +5,7 @@ public class DragAndDrop : MonoBehaviour
     public int id {get; set;}
     // Event handler for when a card is dropped on a character
     public delegate void OnDropDelegate(string cardId, string actorId);
-    public static event OnDropDelegate OnDropEvent;
+    public event OnDropDelegate OnDropEvent;
 
     private Vector3 mOffset;
     private float mZCoord;
@@ -65,7 +65,11 @@ public class DragAndDrop : MonoBehaviour
                     // Call a method on the other object
                     Character character = collider.gameObject.GetComponent<Character>();
                     if (character != null) {
-                        character.OnDrop(gameObject);
+                        // character.OnDrop(gameObject);
+                        // Take the part of the gameObject name until the first underscore
+                        string cardName = gameObject.name.Split('_')[0];
+                        string actorName = character.name.Split('_')[0];
+                        OnDropEvent(cardName, actorName);
                     }
                 }
             }

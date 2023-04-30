@@ -6,17 +6,9 @@ public class Timeline : MonoBehaviour
 {
   // Event delegate for when an object is missed
   public delegate void OnObjectMissedDelegate();
-  // Event delegate for when an object is guessed correctly
-  public delegate void OnObjectGuessedDelegate();
-  // Event delegate for when an object is guessed incorrectly
-  public delegate void OnObjectGuessedIncorrectlyDelegate();
 
   // Event for when an object is missed
   public event OnObjectMissedDelegate OnObjectMissed;
-  // Event for when an object is guessed correctly
-  public event OnObjectGuessedDelegate OnObjectGuessed;
-  // Event for when an object is guessed incorrectly
-  public event OnObjectGuessedIncorrectlyDelegate OnObjectGuessedIncorrectly;
 
 
   public Script script;
@@ -81,41 +73,18 @@ public class Timeline : MonoBehaviour
     var sprite = GetComponent<SpriteRenderer>();
     timelineWidth = sprite.bounds.size.x;
     timelinePositionX = sprite.bounds.center.x - timelineWidth / 2.0f;
-    OnObjectGuessed += () =>
-    {
-      Debug.Log("Object guessed");
-    };
-    OnObjectMissed += () =>
-    {
-      Debug.Log("Object missed");
-    };
   }
 
   // Update is called once per frame
   void Update()
   {
-    // Space bar pressed
-    if (Input.GetKeyDown(KeyCode.Space))
-    {
-      // Toggle the paused state
-      if (waitingForHint)
-      {
-        OnObjectGuessed.Invoke();
-        paused = false;
-        waitingForHint = false;
-        script.items[hintIndex].isMissing = false;
-      }
-    }
-
     if (waitingForHint)
     {
       hintTimer -= Time.deltaTime;
       if (hintTimer <= 0.0f)
       {
         OnObjectMissed.Invoke();
-        paused = false;
-        waitingForHint = false;
-        script.items[hintIndex].isMissing = false;
+        StopWaitingForHint();
       }
     }
 
@@ -152,6 +121,7 @@ public class Timeline : MonoBehaviour
         gameObject.transform.parent = transform;
         // Add the game object to the dictionary
         elementToGameObject[i] = gameObject;
+        gameObject.transform.localScale /= 2.0f;
       }
       var obj = elementToGameObject[i];
       obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
@@ -185,7 +155,36 @@ public class Timeline : MonoBehaviour
     }
   }
 
-  string getWaitingHintEmojiCode()
+  public void Pause()
+  {
+    paused = true;
+  }
+
+  public void Unpause()
+  {
+    paused = false;
+  }
+
+  public void StopWaitingForHint()
+  {
+    if (waitingForHint)
+    {
+      paused = false;
+      waitingForHint = false;
+      script.items[hintIndex].isMissing = false;
+    }
+  }
+
+  public string GetWaitingHintActorId()
+  {
+    if (!waitingForHint)
+    {
+      return "";
+    }
+    return script.items[hintIndex].actorId;
+  }
+
+  public string GetWaitingHintCardId()
   {
     if (!waitingForHint)
     {

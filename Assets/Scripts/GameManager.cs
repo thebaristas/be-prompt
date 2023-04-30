@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+// 44 38 2b
 
 public class GameManager : MonoBehaviour
 {
     public int numberOfActors = 2;
     public int numberOfCards = 8;
-    public GameObject[] actorsPrefabs;
-    public GameObject[] cardsPrefabs;
     public Transform[] actorsSpawnPositions;
     public Transform cardsLeft;
     public Transform cardsRight;
@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
 
     // Static reference to the instance of the singleton class
     private static GameManager instance;
+
+    Dictionary<string, GameObject> actorsPrefabs;
+    Dictionary<string, GameObject> cardsPrefabs;
 
     // Public getter for the singleton instance
     public static GameManager Instance
@@ -62,12 +65,32 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        timeline.OnObjectMissed += () => {
+            Debug.Log("Hint missed!");
+        };
+        actorsPrefabs = new Dictionary<string, GameObject>();
+        // Get the contents of the Resources/Actors folder
+        foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Actors").GetFiles("*.prefab")) {
+            // Load the actor prefab
+            var actorPrefab = Resources.Load<GameObject>("Actors/" + file.Name.Replace(".prefab", ""));
+            // Add the actor prefab to the list of actors prefabs
+            actorsPrefabs.Add(file.Name.Replace(".prefab", ""), actorPrefab);
+        }
+
+        // Same for the cards
+        cardsPrefabs = new Dictionary<string, GameObject>();
+        foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Cards").GetFiles("*.prefab")) {
+            var cardPrefab = Resources.Load<GameObject>("Cards/" + file.Name.Replace(".prefab", ""));
+            cardsPrefabs.Add(file.Name.Replace(".prefab", ""), cardPrefab);
+        }
+
         // Shuffle the spawn positions indices to prevent actors from spawning in the same position
         var randomIndices = getRandomIndices(actorsSpawnPositions.Length);
 
         for (int i = 0; i < numberOfActors; i++) {
-            GameObject prefabToSpawn = actorsPrefabs[i];
+            GameObject prefabToSpawn = actorsPrefabs["Character"];
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndices[i]].position, Quaternion.identity);
+            spawnedPrefab.name = $"Character_{i}";
         }
 
         float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
@@ -78,11 +101,13 @@ public class GameManager : MonoBehaviour
         }
         int order = 0;
         for (int i = 0; i < numberOfCards; i++) {
-            int randomIndex = Random.Range(0, cardsPrefabs.Length);
-            GameObject prefabToSpawn = cardsPrefabs[randomIndex];
+            // Get a random prefab from the cards prefabs
+            GameObject prefabToSpawn = cardsPrefabs["Card"];
             float xPos = startX + i * cardsSpacing;
             Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+            spawnedPrefab.name = $"Card_{i}";
+            spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
             order = SetLayerRecursively(spawnedPrefab, "UI", order);
         }
     }
@@ -91,6 +116,21 @@ public class GameManager : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void OnCardDrop(string cardName, string actorName) {
+        Debug.Log($"Dropped card {cardName} on actor {actorName}");
+        // Print expected hint card and actor
+        Debug.Log($"Expected card: {timeline.GetWaitingHintCardId()}");
+        Debug.Log($"Expected actor: {timeline.GetWaitingHintActorId()}");
+        // Check if we need to drop a card on the timeline
+        if (timeline.GetWaitingHintCardId() == cardName &&
+                timeline.GetWaitingHintActorId() == actorName) {
+            Debug.Log("Correct guess!");
+        } else {
+            Debug.Log("Wrong guess!");
+        }
+        timeline.StopWaitingForHint();
     }
 
     int[] getRandomIndices(int count) {
