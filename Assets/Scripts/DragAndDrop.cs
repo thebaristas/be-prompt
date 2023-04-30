@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class DragAndDrop : MonoBehaviour
 {
+    // Event handler for when a card is dropped on a character
+    public delegate void OnDropDelegate(GameObject gameObject);
+    public static event OnDropDelegate OnDropEvent;
+
     private Vector3 mOffset;
     private float mZCoord;
 

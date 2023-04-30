@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public Transform cardsRight;
     public bool cardSelected {get; set;}
 
+    public Timeline timeline;
+
     // Static reference to the instance of the singleton class
     private static GameManager instance;
 
