@@ -21,7 +21,9 @@ public class DragAndDrop : MonoBehaviour
     }
 
     void OnMouseExit() {
-        transform.position = initialPosition;
+        if (!GameManager.Instance.cardSelected) {
+            transform.position = initialPosition;
+        }
     }
 
     void OnMouseDown()
