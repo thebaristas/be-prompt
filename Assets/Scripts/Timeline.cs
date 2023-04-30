@@ -4,14 +4,26 @@ using UnityEngine;
 
 public class Timeline : MonoBehaviour
 {
+  // Event delegate for when an object is missed
+  public delegate void OnObjectMissedDelegate();
+  // Event delegate for when an object is guessed correctly
+  public delegate void OnObjectGuessedDelegate();
+  // Event delegate for when an object is guessed incorrectly
+  public delegate void OnObjectGuessedIncorrectlyDelegate();
+
+  // Event for when an object is missed
+  public event OnObjectMissedDelegate OnObjectMissed;
+  // Event for when an object is guessed correctly
+  public event OnObjectGuessedDelegate OnObjectGuessed;
+  // Event for when an object is guessed incorrectly
+  public event OnObjectGuessedIncorrectlyDelegate OnObjectGuessedIncorrectly;
+
+
   Script script;
   bool paused = false; // whether the timeline is paused
   bool waitingForHint = false; // whether the player should give a hint
   int hintIndex = 0; // the index of the script item that needs a hint
-  // script speed
-  // start time
-  // script time (progress)
-
+  float hintTimer = 0.0f; // in seconds
   float elapsedTime = 0.0f; // in seconds, corresponds to the right edge of the timeline
   float timelineWidth;
   float timelinePositionX;
@@ -22,7 +34,13 @@ public class Timeline : MonoBehaviour
 
   // Dictionary from element ID to game object, to track which game objects are currently visible.
   Dictionary<int, SpriteRenderer> elementToGameObject = new Dictionary<int, SpriteRenderer>();
+
   public float timelineTotalDuration = 5.0f; // in seconds
+  public float hintTimerDuration = 3.0f; // in seconds
+  // script speed
+  public float scriptSpeed = 1.0f;
+  // start time
+  public float initialDelay = 0.0f; // in seconds
 
   // Start is called before the first frame update
   void Start()
@@ -50,14 +68,25 @@ public class Timeline : MonoBehaviour
       // Choose a random emoji code and player ID
       var emojiCode = emojiCodes[Random.Range(0, emojiCodes.Count)];
       var playerID = playerIDs[Random.Range(0, playerIDs.Count)];
+      // Get a random isMissing value with a probability of .3 of being true
+      var isMissing = Random.Range(0.0f, 1.0f) < .2f;
       // Add a new script item
-      script.items.Add(new ScriptItem(emojiCode, playerID));
+      script.items.Add(new ScriptItem(emojiCode, playerID, isMissing));
     }
 
+    elapsedTime = -initialDelay;
     // Get the timeline width and position
     var sprite = GetComponent<SpriteRenderer>();
     timelineWidth = sprite.bounds.size.x;
     timelinePositionX = sprite.bounds.center.x - timelineWidth / 2.0f;
+    OnObjectGuessed += () =>
+    {
+      Debug.Log("Object guessed");
+    };
+    OnObjectMissed += () =>
+    {
+      Debug.Log("Object missed");
+    };
   }
 
   // Update is called once per frame
@@ -67,12 +96,27 @@ public class Timeline : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.Space))
     {
       // Toggle the paused state
-      if (waitingForHint) {
+      if (waitingForHint)
+      {
+        OnObjectGuessed.Invoke();
         paused = false;
         waitingForHint = false;
         script.items[hintIndex].isMissing = false;
       }
     }
+
+    if (waitingForHint)
+    {
+      hintTimer -= Time.deltaTime;
+      if (hintTimer <= 0.0f)
+      {
+        OnObjectMissed.Invoke();
+        paused = false;
+        waitingForHint = false;
+        script.items[hintIndex].isMissing = false;
+      }
+    }
+
     if (!paused)
     {
       // Update the elapsed time
@@ -104,29 +148,30 @@ public class Timeline : MonoBehaviour
         gameObject.name = i + "_" + item.emojiCode;
         var sr = gameObject.AddComponent<SpriteRenderer>();
         sr.sprite = sprite;
-        // Make missing items red
-        if (item.isMissing)
-        {
-          sr.color = Color.red;
-        }
         // Make sr a child of this game object
         sr.transform.parent = transform;
         // Add the game object to the dictionary
         elementToGameObject[i] = sr;
-        // Print the creation (index and emoji code) of the game object
-        // Debug.Log("Created " + i + " " + item.emojiCode);
       }
       var spriteRenderer = elementToGameObject[i];
+      // Make missing items red
+      if (item.isMissing)
+      {
+        spriteRenderer.color = Color.red;
+      }
+      else
+      {
+        spriteRenderer.color = Color.white;
+      }
       spriteRenderer.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
-      if (item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
+      if (!waitingForHint && item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
       {
         paused = true;
         hintIndex = i;
         waitingForHint = true;
+        hintTimer = hintTimerDuration;
       }
       elementTime += item.delay;
-      // Print the index, emoji code and position of the game object
-      //   Debug.Log(i + " " + item.emojiCode + " " + spriteRenderer.transform.position);
     }
 
     // Destroy the game objects that are no longer visible
@@ -144,13 +189,18 @@ public class Timeline : MonoBehaviour
     {
       var spriteRenderer = elementToGameObject[i];
       var item = script.items[i];
-      if (item.isMissing) {
-        Debug.Log("Missed " + i + " " + item.emojiCode);
-      }
       Destroy(spriteRenderer.gameObject);
-    //   Debug.Log("Deleted " + i + " " + item.emojiCode);
       elementToGameObject.Remove(i);
     }
+  }
+
+  string getWaitingHintEmojiCode()
+  {
+    if (!waitingForHint)
+    {
+      return "";
+    }
+    return script.items[hintIndex].emojiCode;
   }
 
   float GetTimelinePosition(float time)
