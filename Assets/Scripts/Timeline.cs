@@ -19,7 +19,7 @@ public class Timeline : MonoBehaviour
   public event OnObjectGuessedIncorrectlyDelegate OnObjectGuessedIncorrectly;
 
 
-  Script script;
+  public Script script;
   bool paused = false; // whether the timeline is paused
   bool waitingForHint = false; // whether the player should give a hint
   int hintIndex = 0; // the index of the script item that needs a hint
@@ -144,7 +144,8 @@ public class Timeline : MonoBehaviour
       if (!elementToGameObject.ContainsKey(i))
       {
         // Create a new game object
-        var gameObject = Resources.Load<GameObject>("Cards/" + item.cardId);
+        var gameObjectPrefab = Resources.Load<GameObject>("Cards/" + item.cardId);
+        var gameObject = Instantiate(gameObjectPrefab);
         // Set the name of the game object to the index and emoji code
         gameObject.name = i + "_" + item.cardId;
         // Make sr a child of this game object
@@ -152,8 +153,8 @@ public class Timeline : MonoBehaviour
         // Add the game object to the dictionary
         elementToGameObject[i] = gameObject;
       }
-      var spriteRenderer = elementToGameObject[i];
-      spriteRenderer.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
+      var obj = elementToGameObject[i];
+      obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
       if (!waitingForHint && item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
       {
         paused = true;

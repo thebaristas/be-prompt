@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class ScriptItem {
     public float delay; // in seconds
     public string cardId;
@@ -16,6 +17,7 @@ public class ScriptItem {
     }
 }
 
+[System.Serializable]
 public class Script
 {
     public List<ScriptItem> items;

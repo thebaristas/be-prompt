@@ -4,7 +4,7 @@ public class DragAndDrop : MonoBehaviour
 {
     public int id {get; set;}
     // Event handler for when a card is dropped on a character
-    public delegate void OnDropDelegate(GameObject gameObject);
+    public delegate void OnDropDelegate(string cardId, string actorId);
     public static event OnDropDelegate OnDropEvent;
 
     private Vector3 mOffset;
