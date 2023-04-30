@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Event delegate for when a card should be said
-public delegate void OnCardDisplayDelegate(string actorId, string cardId);
+public delegate void OnCardDisplayDelegate(string actorId, string cardId, bool isMissing);
 // Event delegate for when an object is missed
 public delegate void OnObjectMissedDelegate();
 
