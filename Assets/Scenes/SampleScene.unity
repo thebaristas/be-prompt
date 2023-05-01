@@ -1868,10 +1868,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2085932886}
     - target: {fileID: 7013882605680959773, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
-      propertyPath: numberOfCards
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7013882605680959773, guid: ee3899b6b80094c0f90c140fb2dba032, type: 3}
       propertyPath: cardsSpawnPosition
       value: 
       objectReference: {fileID: 1919149913}
