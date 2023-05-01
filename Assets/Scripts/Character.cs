@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public string id;
     public Bubble bubble;
     public SpriteRenderer spriteRenderer;
 

@@ -103,7 +103,6 @@ public class GameManager : MonoBehaviour
       spawnedPrefab.name = id;
       Character character = spawnedPrefab.GetComponent<Character>();
       if (character) {
-        character.id = id;
         character.spriteRenderer.color = actorColors[colorRandomIndices[i]];
         actors.Add(id, character);
       } else {
