@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    public LevelParameters levelParams {get; set;}
+    public LevelParameters levelParams {get; private set;}
 
     void Awake()
     {

@@ -43,6 +43,7 @@ public class Timeline : MonoBehaviour
   public float hintTimerDuration = 3.0f; // in seconds
   // script speed
   public float scriptSpeed = 1.0f;
+  public int scriptLength = 20;
   public float missingProbability = 0.5f; // probability of a card missing
   // start time
   public float initialDelay = 0.0f; // in seconds
@@ -73,7 +74,7 @@ public class Timeline : MonoBehaviour
     script = new Script();
     script.items = new List<ScriptItem>();
     Debug.Log("Creating script with " + cardIds.Count + " cards and " + actorsIds.Count + " actors, with a missing probability of " + missingProbability + ".");
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < scriptLength; ++i)
     {
       // Choose a random emoji code and player ID
       var cardId = cardIds[Random.Range(0, cardIds.Count)];

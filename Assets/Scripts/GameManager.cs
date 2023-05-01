@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     new Color32(0x91, 0xFF, 0x83, 0xFF)
   };
 
-  private static LevelManager levelManager;
+  public LevelManager levelManager {get; private set;}
   public int successfulScore = 0;
   public int missedScore = 0;
   public int performanceScore = 0;
@@ -105,6 +105,7 @@ public class GameManager : MonoBehaviour
       timeline.scriptSpeed = lp.scriptSpeed;
       timeline.missingProbability = lp.missingProbability;
       timeline.hintTimerDuration = lp.hintTimerDuration;
+      timeline.scriptLength = lp.scriptLength;
       numberOfActors = lp.actorsCount;
       numberOfCards = lp.cardsCount;
     }
