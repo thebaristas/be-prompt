@@ -9,11 +9,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1749199305015900769, guid: 0005479be1319324db24e5f4098cf3b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.56
+      value: 2.14
       objectReference: {fileID: 0}
     - target: {fileID: 1749199305015900769, guid: 0005479be1319324db24e5f4098cf3b7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.9
+      value: 7.14
       objectReference: {fileID: 0}
     - target: {fileID: 7127632663930920390, guid: 0005479be1319324db24e5f4098cf3b7, type: 3}
       propertyPath: animatorBlend

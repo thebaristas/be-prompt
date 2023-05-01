@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 0759fc5d2d7b445ddbf1603678e99e69
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Munson
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: f1912dc6805844aa29d99d77f0e73593, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
