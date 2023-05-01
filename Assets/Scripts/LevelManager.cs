@@ -14,7 +14,10 @@ public class LevelManager : MonoBehaviour
         string scene = "SampleScene";
         Debug.Log($"loading scene {scene}");
         levelParams = levelParameters;
-        if (levelParameters.difficulty < 2 ) {
+        if (levelParameters.difficulty < 1 ) {
+            SnapshotDuration[] snapshotDurations = { new SnapshotDuration(AudioSnapshotsNames.Silence, 1f, 3f), new SnapshotDuration(AudioSnapshotsNames.A1, 60, 2f) };
+            AudioManager.Instance.ProgramSnapshotDurations(snapshotDurations);
+        } else if (levelParameters.difficulty < 3 ) {
             SnapshotDuration[] snapshotDurations = { new SnapshotDuration(AudioSnapshotsNames.Silence, 1f, 3f), new SnapshotDuration(AudioSnapshotsNames.B1, 60, 2f) };
             AudioManager.Instance.ProgramSnapshotDurations(snapshotDurations);
         } else {
