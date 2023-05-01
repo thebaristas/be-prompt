@@ -6,6 +6,7 @@ public class Character : MonoBehaviour
 {
     public Bubble bubble;
     public SpriteRenderer spriteRenderer;
+    public Animator animator;
 
     void Awake()
     {
@@ -15,6 +16,12 @@ public class Character : MonoBehaviour
         } else {
             Debug.LogWarning("No sprite renderer for Character");
         }
+        Animator anim = GetComponent<Animator>();
+        if (anim) {
+            animator = anim;
+        } else {
+            Debug.LogWarning("No animator for Character");
+        }
     }
 
     // Start is called before the first frame update
@@ -23,18 +30,39 @@ public class Character : MonoBehaviour
         GameManager.Instance.SubscribeToCardDisplayEvents(HandleCardDisplay);
     }
 
+    public void HandleCardDrop(bool correct, string cardSpriteId) {
+        string trigger;
+        string resourcePath;
+        if (correct) {
+            resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
+            trigger = AnimatorTriggerName.Talk;
+        } else {
+            resourcePath = ResourcePaths.RedMarkSprite;
+            trigger = AnimatorTriggerName.Idle;
+        }
+        Animate(trigger, resourcePath);
+    }
+
     public void HandleCardDisplay(string actorId, string cardSpriteId, bool isMissing) {
         if (actorId != name) {
-            bubble.Hide();
+            animator.SetTrigger(AnimatorTriggerName.Idle);
+            bubble.Display();
         } else {
             string resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
+            string trigger = AnimatorTriggerName.Talk;
             if (isMissing) {
                 resourcePath = ResourcePaths.QuestionMarkSprite;
+                trigger = AnimatorTriggerName.Embarrassed;
             }
-            Sprite sprite = Resources.Load<Sprite>(resourcePath);
-            if (sprite) {
-                bubble.Display(sprite);
-            }
+            Animate(trigger, resourcePath);
+        }
+    }
+
+    private void Animate(string animatorTrigger, string cardSpriteResourcePath) {
+        Sprite sprite = Resources.Load<Sprite>(cardSpriteResourcePath);
+        if (sprite) {
+            bubble.Display(sprite);
+            animator.SetTrigger(animatorTrigger);
         }
     }
 }

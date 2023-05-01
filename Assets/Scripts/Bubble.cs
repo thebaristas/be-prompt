@@ -32,7 +32,7 @@ public class Bubble : MonoBehaviour
         display = true;
     }
 
-    public void Hide() {
+    public void Display() {
         display = false;
     }
 }

@@ -169,15 +169,11 @@ public class GameManager : MonoBehaviour
     Debug.Log($"Expected card: {timeline.GetWaitingHintCardId()}");
     Debug.Log($"Expected actor: {timeline.GetWaitingHintActorId()}");
     // Check if we need to drop a card on the timeline
-    if (timeline.GetWaitingHintCardId() == cardName &&
-            timeline.GetWaitingHintActorId() == actorName)
+    bool correct = timeline.GetWaitingHintCardId() == cardName &&
+            timeline.GetWaitingHintActorId() == actorName;
+    if (correct)
     {
       Debug.Log("Correct guess!");
-      string resourcePath = $"{ResourcePaths.CardSprites}/{cardName}";
-      Sprite sprite = Resources.Load<Sprite>(resourcePath);
-      if (sprite) {
-        actor.bubble.Display(sprite);
-      }
       if (score < 3)
       {
         ChangeScore(1);
@@ -185,13 +181,10 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-      Sprite sprite = Resources.Load<Sprite>(ResourcePaths.RedMarkSprite);
-      if (sprite) {
-        actor.bubble.Display(sprite);
-      }
       Debug.Log("Wrong guess!");
       ChangeScore(-1);
     }
+    actor.HandleCardDrop(correct, cardName);
     timeline.StopWaitingForHint();
   }
 
