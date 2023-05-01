@@ -76,6 +76,10 @@ public class GameManager : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+    // Fetch levelmanager FindObjectOfType<LevelManager>()
+    // give levelparameters to timeline
+    // create actors/cards based on levelmanager
+
     timeline.OnObjectMissed += () =>
     {
       Debug.Log("Hint missed!");
@@ -134,6 +138,7 @@ public class GameManager : MonoBehaviour
         spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
         order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
     }
+    // this should create Timeline
     timeline.gameObject.SetActive(true);
   }
 
