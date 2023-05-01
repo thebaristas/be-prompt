@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
     new Color32(0x91, 0xFF, 0x83, 0xFF)
   };
 
-  // Static reference to the instance of the singleton class
-  private static GameManager instance;
+//   // Static reference to the instance of the singleton class
+//   private static GameManager instance;
   private static LevelManager levelManager;
   private int score = 0;
   Card cardPrefab;
@@ -35,44 +35,44 @@ public class GameManager : MonoBehaviour
 
   public Dictionary<string, Character> actors { get; private set; }
 
-  // Public getter for the singleton instance
-  public static GameManager Instance
-  {
-    get
-    {
-      // If the instance hasn't been set yet, try to find it in the scene
-      if (instance == null)
-      {
-        instance = FindObjectOfType<GameManager>();
+//   // Public getter for the singleton instance
+//   public static GameManager Instance
+//   {
+//     get
+//     {
+//       // If the instance hasn't been set yet, try to find it in the scene
+//       if (instance == null)
+//       {
+//         instance = FindObjectOfType<GameManager>();
 
-        // If the instance still hasn't been set, log an error message
-        if (instance == null)
-        {
-          Debug.LogError("No instance of GameManager found in the scene!");
-        }
-      }
+//         // If the instance still hasn't been set, log an error message
+//         if (instance == null)
+//         {
+//           Debug.LogError("No instance of GameManager found in the scene!");
+//         }
+//       }
 
-      return instance;
-    }
-  }
+//       return instance;
+//     }
+//   }
 
-  // Private constructor to prevent direct instantiation of the class
-  private GameManager() { }
+//   // Private constructor to prevent direct instantiation of the class
+//   private GameManager() { }
 
   void Awake()
   {
-    // If there is already an instance of the class, destroy the new one
-    if (instance != null && instance != this)
-    {
-      Destroy(gameObject);
-      return;
-    }
+    // // If there is already an instance of the class, destroy the new one
+    // if (instance != null && instance != this)
+    // {
+    //   Destroy(gameObject);
+    //   return;
+    // }
 
-    // Otherwise, set the instance to this object
-    instance = this;
+    // // Otherwise, set the instance to this object
+    // instance = this;
 
-    // Make the game object persist across scenes
-    DontDestroyOnLoad(gameObject);
+    // // Make the game object persist across scenes
+    // DontDestroyOnLoad(gameObject);
 
     actors = new Dictionary<string, Character>();
   }

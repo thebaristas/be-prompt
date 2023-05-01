@@ -6,6 +6,7 @@ public class DragAndDrop : MonoBehaviour
   // Event handler for when a card is dropped on a character
   public delegate void OnDropDelegate(GameObject dropped, Character actor);
   public event OnDropDelegate OnDropEvent;
+  public GameManager gameManager;
 
   private Vector3 mOffset;
   private float mZCoord;
@@ -17,12 +18,16 @@ public class DragAndDrop : MonoBehaviour
 
   void Start()
   {
+    if (gameManager == null)
+    {
+      gameManager = FindObjectOfType<GameManager>();
+    }
     initialPosition = transform.position;
   }
 
   void OnMouseOver()
   {
-    if (GameManager.Instance.cardSelected == -1)
+    if (gameManager.cardSelected == -1)
     {
       transform.position = Vector3.Lerp(transform.position, initialPosition + new Vector3(0, 1, 0), 10.0f * Time.deltaTime);
     }
@@ -30,7 +35,7 @@ public class DragAndDrop : MonoBehaviour
 
   void OnMouseExit()
   {
-    if (GameManager.Instance.cardSelected == -1)
+    if (gameManager.cardSelected == -1)
     {
       transform.position = initialPosition;
     }
@@ -38,7 +43,7 @@ public class DragAndDrop : MonoBehaviour
 
   void OnMouseDown()
   {
-    GameManager.Instance.cardSelected = id;
+    gameManager.cardSelected = id;
     mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
     mOffset = gameObject.transform.position - GetMouseWorldPos();
     isDragging = true;
@@ -104,7 +109,7 @@ public class DragAndDrop : MonoBehaviour
     isDragging = false;
     transform.position = initialPosition;
     GameManager.SetLayerRecursively(this.gameObject, "UI", sortingOrder);
-    GameManager.Instance.cardSelected = -1;
+    gameManager.cardSelected = -1;
   }
 
   Character GetHoveredCharacter()

@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     public Bubble bubble;
     public SpriteRenderer spriteRenderer;
     public Animator animator;
+    public GameManager gameManager;
 
     void Awake()
     {
@@ -27,7 +28,10 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameManager.Instance.SubscribeToCardDisplayEvents(HandleCardDisplay);
+        if (gameManager == null) {
+            gameManager = FindAnyObjectByType<GameManager>();
+        }
+        gameManager.SubscribeToCardDisplayEvents(HandleCardDisplay);
     }
 
     public void HandleCardDrop(bool correct, string cardSpriteId) {

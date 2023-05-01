@@ -34,6 +34,7 @@ public class Timeline : MonoBehaviour
   // Dictionary from element ID to game object, to track which game objects are currently visible.
   Dictionary<int, Card> elementToGameObject = new Dictionary<int, Card>();
 
+  public GameManager gameManager;
   public float timelineTotalDuration = 5.0f; // in seconds
   public float hintTimerDuration = 3.0f; // in seconds
   // script speed
@@ -57,6 +58,9 @@ public class Timeline : MonoBehaviour
     timelineWidth = sprite.bounds.size.x;
     timelinePositionX = sprite.bounds.center.x - timelineWidth / 2.0f;
     cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
+    if (gameManager == null) {
+      gameManager = FindObjectOfType<GameManager>();
+    }
   }
 
   public void CreateScript()
@@ -143,7 +147,7 @@ public class Timeline : MonoBehaviour
         var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
         var gameObject = Instantiate(gameObjectPrefab);
 
-        Character actor = GameManager.Instance.actors[item.actorId];
+        Character actor = gameManager.actors[item.actorId];
         if (actor != null && actor.spriteRenderer != null && gameObject.drawingSpriteRenderer != null) {
           gameObject.frameSpriteRenderer.color = actor.spriteRenderer.color;
         }
