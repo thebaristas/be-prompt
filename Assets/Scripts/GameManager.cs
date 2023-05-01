@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour
   };
 
   private static LevelManager levelManager;
-  private int score = 0;
+  public int successfulScore = 0;
+  public int missedScore = 0;
+  public int performanceScore = 0;
   Card cardPrefab;
   Sprite[] cardSprites;
   Character[] actorsPrefabs;
@@ -68,8 +70,10 @@ public class GameManager : MonoBehaviour
 
   public void ResetGame()
   {
-    score = 0;
-    scoreText.text = score.ToString();
+    successfulScore = 0;
+    missedScore = 0;
+    performanceScore = 0;
+    scoreText.text = successfulScore.ToString();
     Debug.Log("Resetting game...");
     if (gameOverPanel == null)
     {
@@ -178,10 +182,15 @@ public class GameManager : MonoBehaviour
 
   void ChangeScore(int scoreChange)
   {
-    score += scoreChange;
-    scoreText.text = score.ToString();
-    scoreText.GetComponent<Animator>().Play("ScorePop");
-    if (score <= -3)
+    performanceScore = Mathf.Min(performanceScore + scoreChange, 3);
+    if (scoreChange > 0) {
+      successfulScore += scoreChange;
+      scoreText.text = successfulScore.ToString();
+      scoreText.GetComponent<Animator>().Play("ScorePop");
+    } else {
+      missedScore += scoreChange;
+    }
+    if (performanceScore <= -3)
     {
       Debug.Log("Game over!");
       gameOverPanel.SetActive(true);
@@ -209,10 +218,7 @@ public class GameManager : MonoBehaviour
       {
         actor.bubble.Display(sprite);
       }
-      if (score < 3)
-      {
-        ChangeScore(1);
-      }
+      ChangeScore(1);
     }
     else
     {
