@@ -6,6 +6,8 @@ using UnityEngine;
 public delegate void OnCardDisplayDelegate(string actorId, string cardSpriteId, bool isMissing);
 // Event delegate for when an object is missed
 public delegate void OnObjectMissedDelegate();
+// Event delegate for when the timeline is finished
+public delegate void OnTimelineFinishedDelegate();
 
 public class Timeline : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class Timeline : MonoBehaviour
 
   // Event for when an object is missed
   public event OnObjectMissedDelegate OnObjectMissed;
+  // Event for when the timeline is finished
+  public event OnTimelineFinishedDelegate OnTimelineFinished;
 
 
   public Script script = null;
@@ -128,6 +132,10 @@ public class Timeline : MonoBehaviour
     {
       firstVisibleIndexTime += script.items[firstVisibleIndex].delay;
       ++firstVisibleIndex;
+      if (firstVisibleIndex >= script.items.Count)
+      {
+        OnTimelineFinished.Invoke();
+      }
     }
     while (lastVisibleIndex < script.items.Count && lastVisibleIndexTime < elapsedTime)
     {

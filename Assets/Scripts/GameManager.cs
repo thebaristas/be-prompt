@@ -113,6 +113,14 @@ public class GameManager : MonoBehaviour
       Debug.LogError("No level manager found");
     }
 
+    timeline.OnTimelineFinished += () =>
+    {
+      Debug.Log("Timeline finished");
+      timeline.Pause();
+      gameOverPanel.SetActive(true);
+      //   gameOverPanel.GetComponent<Animator>().Play("GameOverPanel");
+    };
+
     timeline.OnObjectMissed += () =>
     {
       Debug.Log("Hint missed!");
