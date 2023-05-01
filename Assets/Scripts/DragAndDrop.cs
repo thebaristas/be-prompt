@@ -4,7 +4,7 @@ public class DragAndDrop : MonoBehaviour
 {
   public int id { get; set; }
   // Event handler for when a card is dropped on a character
-  public delegate void OnDropDelegate(string cardId, string actorId);
+  public delegate void OnDropDelegate(GameObject dropped, Character actor);
   public event OnDropDelegate OnDropEvent;
 
   private Vector3 mOffset;
@@ -89,7 +89,7 @@ public class DragAndDrop : MonoBehaviour
           if (character != null)
           {
             // Take the part of the gameObject name until the first underscore
-            OnDropEvent(gameObject.name, character.name);
+            OnDropEvent(gameObject, character);
             if (hoveredCharacter != null)
             {
               // Set the outline enabled shader property of the sprite material

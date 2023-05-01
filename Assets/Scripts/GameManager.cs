@@ -156,8 +156,10 @@ public class GameManager : MonoBehaviour
     }
   }
 
-  void OnCardDrop(string cardName, string actorName)
+  void OnCardDrop(GameObject dropped, Character actor)
   {
+    string cardName = dropped.name;
+    string actorName = actor.name;
     Debug.Log($"Dropped card {cardName} on actor {actorName}");
     // Print expected hint card and actor
     Debug.Log($"Expected card: {timeline.GetWaitingHintCardId()}");
@@ -167,6 +169,11 @@ public class GameManager : MonoBehaviour
             timeline.GetWaitingHintActorId() == actorName)
     {
       Debug.Log("Correct guess!");
+      string resourcePath = $"{ResourcePaths.CardSprites}/{cardName}";
+      Sprite sprite = Resources.Load<Sprite>(resourcePath);
+      if (sprite) {
+        actor.bubble.Display(sprite);
+      }
       if (score < 3)
       {
         ChangeScore(1);
@@ -174,6 +181,10 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      Sprite sprite = Resources.Load<Sprite>(ResourcePaths.RedMarkSprite);
+      if (sprite) {
+        actor.bubble.Display(sprite);
+      }
       Debug.Log("Wrong guess!");
       ChangeScore(-1);
     }
