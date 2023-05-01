@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     new Color32(0x91, 0xFF, 0x83, 0xFF)
   };
 
+  public AudioManager audioManager { get; private set; }
   public LevelManager levelManager { get; private set; }
   public int successfulScore = 0;
   public int missedScore = 0;
@@ -60,6 +61,8 @@ public class GameManager : MonoBehaviour
         timeline.Unpause();
       }
     };
+    audioManager = FindObjectOfType<AudioManager>();
+    audioManager.TransitionSnapshots(AudioSnapshotsNames.A2, 0.1f);
   }
 
   // Update is called once per frame

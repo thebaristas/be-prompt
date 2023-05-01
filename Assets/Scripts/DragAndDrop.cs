@@ -54,6 +54,7 @@ public class DragAndDrop : MonoBehaviour
     }
     GameManager.SetLayerRecursively(this.gameObject, "Top", sortingOrder);
     transform.position = transform.position + new Vector3(0, 1, 0);
+    AudioManager.Instance.PlayClip(AudioClipNames.M_click);
   }
 
   void OnMouseDrag()
@@ -102,6 +103,7 @@ public class DragAndDrop : MonoBehaviour
 
             }
             hoveredCharacter = null;
+            AudioManager.Instance.PlayClip(AudioClipNames.M_swoosh);
           }
         }
       }

@@ -36,21 +36,26 @@ public class MainMenu : MonoBehaviour
     public void ShowCredits()
     {
         creditsPanel.SetActive(true);
+        Debug.LogWarning(AudioClipNames.M_click);
+        AudioManager.Instance.PlayClip(AudioClipNames.M_click);
     }
 
     public void HideCredits()
     {
         creditsPanel.SetActive(false);
+        AudioManager.Instance.PlayClip(AudioClipNames.M_click);
     }
 
     public void ShowLevelSelect()
     {
         levelSelectPanel.SetActive(true);
+        AudioManager.Instance.PlayClip(AudioClipNames.M_click);
         scrollRect.verticalNormalizedPosition = 1; // Scroll to top of level select panel
     }
 
     public void HideLevelSelect()
     {
         levelSelectPanel.SetActive(false);
+        AudioManager.Instance.PlayClip(AudioClipNames.M_click);
     }
 }

@@ -17,6 +17,7 @@ public class LevelButton : MonoBehaviour
 
     public void OnClick()
     {
+        AudioManager.Instance.PlayClip(AudioClipNames.M_click);
         // Start the selected level
         FindObjectOfType<LevelManager>().StartLevel(levelParameters);
     }

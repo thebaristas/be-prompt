@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
         string scene = "SampleScene";
         Debug.Log($"loading scene {scene}");
         levelParams = levelParameters;
+        AudioManager.Instance.PlayClip(AudioClipNames.M_Shush1);
         SceneManager.LoadScene(scene);
     }
 }
