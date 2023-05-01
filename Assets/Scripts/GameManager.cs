@@ -66,8 +66,12 @@ public class GameManager : MonoBehaviour
   void Update()
   {
     // Lerp the anchor position of the newspaper to the 0, 0
-    var newspaper = GameObject.Find("Newspaper").GetComponent<RectTransform>();
-    newspaper.anchoredPosition = Vector2.Lerp(newspaper.anchoredPosition, Vector2.zero, 0.1f);
+    var newspaperObj = GameObject.Find("Newspaper");
+    if (newspaperObj)
+    {
+      var newspaper = newspaperObj.GetComponent<RectTransform>();
+      newspaper.anchoredPosition = Vector2.Lerp(newspaper.anchoredPosition, Vector2.zero, 0.1f);
+    }
   }
 
   public void ResetGame()
@@ -132,9 +136,9 @@ public class GameManager : MonoBehaviour
 
     // Shuffle the spawn positions indices to prevent actors from spawning in the same position
     // var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
-    var positionRandomIndices = new int[] {1, 2, 0, 3};
-    var colorRandomIndices = new int[] {0, 1, 2, 3};
-    var actorPrefabIds = new int[] {0, 1, 0, 1};
+    var positionRandomIndices = new int[] { 1, 2, 0, 3 };
+    var colorRandomIndices = new int[] { 0, 1, 2, 3 };
+    var actorPrefabIds = new int[] { 0, 1, 0, 1 };
 
     Debug.Log("number of actors: " + numberOfActors);
     numberOfActors = Mathf.Min(numberOfActors, actorsSpawnPositions.Length);
@@ -224,7 +228,8 @@ public class GameManager : MonoBehaviour
     GameObject.Find("Newspaper").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1000);
   }
 
-  string randomCriticName() {
+  string randomCriticName()
+  {
     var names = new List<string>();
     names.Add("The Drama Lama");
     names.Add("The Stage Sage");

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a0948987e0304199be11daec9245870, type: 3}
   m_Name: Amateur
   m_EditorClassIdentifier: 
-  actorsCount: 1
+  actorsCount: 2
   cardsCount: 2
   playableCardsCount: 1
   scriptSpeed: 0.7
