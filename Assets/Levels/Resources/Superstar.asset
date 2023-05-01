@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a0948987e0304199be11daec9245870, type: 3}
-  m_Name: Tutorial
+  m_Name: Superstar
   m_EditorClassIdentifier: 
-  actorsCount: 1
-  cardsCount: 1
-  scriptSpeed: 1
-  missingProbability: 0.5
+  actorsCount: 4
+  cardsCount: 8
+  scriptSpeed: 2
+  missingProbability: 0.7
+  hintTimerDuration: 1.5

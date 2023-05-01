@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.IO;
 // 44 38 2b
 
 public class GameManager : MonoBehaviour
 {
   public int numberOfActors = 2;
+  public int numberOfCards = 1;
   public Transform[] actorsSpawnPositions;
   public Transform cardsLeft;
   public Transform cardsRight;
@@ -23,12 +25,15 @@ public class GameManager : MonoBehaviour
 
   // Static reference to the instance of the singleton class
   private static GameManager instance;
+  private static LevelManager levelManager;
   private int score = 0;
+  Card cardPrefab;
+  Sprite[] cardSprites;
 
   Dictionary<string, GameObject> actorsPrefabs;
-  Dictionary<string, GameObject> cardSprites;
+  public GameObject gameOverPanel;
 
-  public Dictionary<string, Character> actors { get; private set;}
+  public Dictionary<string, Character> actors { get; private set; }
 
   // Public getter for the singleton instance
   public static GameManager Instance
@@ -76,15 +81,7 @@ public class GameManager : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-    // Fetch levelmanager FindObjectOfType<LevelManager>()
-    // give levelparameters to timeline
-    // create actors/cards based on levelmanager
-
-    timeline.OnObjectMissed += () =>
-    {
-      Debug.Log("Hint missed!");
-      ChangeScore(-1);
-    };
+    Debug.Log("GameManager started");
     actorsPrefabs = new Dictionary<string, GameObject>();
     // Get the contents of the Resources/Actors folder
     foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Actors").GetFiles("*.prefab"))
@@ -94,52 +91,9 @@ public class GameManager : MonoBehaviour
       // Add the actor prefab to the list of actors prefabs
       actorsPrefabs.Add(file.Name.Replace(".prefab", ""), actorPrefab);
     }
-
-    // Shuffle the spawn positions indices to prevent actors from spawning in the same position
-    var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
-    var colorRandomIndices = getRandomIndices(actorColors.Length);
-
-    for (int i = 0; i < numberOfActors; i++)
-    {
-      GameObject prefabToSpawn = actorsPrefabs["Character"];
-      GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
-      string id = $"Character_{i}";
-      spawnedPrefab.name = id;
-      Character character = spawnedPrefab.GetComponent<Character>();
-      if (character) {
-        character.spriteRenderer.color = actorColors[colorRandomIndices[i]];
-        actors.Add(id, character);
-      } else {
-        Debug.LogError($"No character component for {id}");
-        continue;
-      }
-    }
-
-    int numberOfCards = timeline.cardIds.Length;
-    float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
-    float startX = -(numberOfCards / 2) * cardsSpacing;
-    if (numberOfCards % 2 == 0)
-    {
-      startX += cardsSpacing / 2;
-    }
-
-    Card cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
-    int order = 0;
-    for (int i = 0; i < numberOfCards; i++)
-    {
-        Sprite cardSprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{timeline.cardIds[i]}"); ;
-
-        float xPos = startX + i * cardsSpacing;
-        Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
-        Card spawnedPrefab = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
-
-        spawnedPrefab.name = cardSprite.name;
-        spawnedPrefab.drawingSpriteRenderer.sprite = cardSprite;
-        spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
-        order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
-    }
-    // this should create Timeline
-    timeline.gameObject.SetActive(true);
+    cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
+    cardSprites = Resources.LoadAll<Sprite>(ResourcePaths.CardSprites);
+    ResetGame();
   }
 
   // Update is called once per frame
@@ -148,14 +102,130 @@ public class GameManager : MonoBehaviour
 
   }
 
+  public void ResetGame()
+  {
+    score = 0;
+    scoreText.text = score.ToString();
+    Debug.Log("Resetting game...");
+    if (gameOverPanel == null)
+    {
+      gameOverPanel = GameObject.Find("GameOverPanel");
+      if (gameOverPanel == null)
+      {
+        Debug.LogError("No GameOverPanel found");
+      }
+    }
+
+    if (timeline == null)
+    {
+      Debug.Log("Timeline is null, getting it from scene: " + GameObject.Find("Timeline"));
+      timeline = GameObject.Find("Timeline").GetComponent<Timeline>();
+    }
+
+    if (scoreText == null)
+    {
+      scoreText = GameObject.Find("Score").GetComponent<TMPro.TMP_Text>();
+    }
+
+    // Fetch levelmanager FindObjectOfType<LevelManager>()
+    // give levelparameters to timeline
+    // create actors/cards based on levelmanager
+    levelManager = FindObjectOfType<LevelManager>();
+    if (levelManager)
+    {
+      var lp = levelManager.levelParams;
+      timeline.scriptSpeed = lp.scriptSpeed;
+      timeline.missingProbability = lp.missingProbability;
+      timeline.hintTimerDuration = lp.hintTimerDuration;
+      numberOfActors = lp.actorsCount;
+      numberOfCards = lp.cardsCount;
+    }
+    else
+    {
+      Debug.LogError("No level manager found");
+    }
+
+    timeline.OnObjectMissed += () =>
+    {
+      Debug.Log("Hint missed!");
+      ChangeScore(-1);
+    };
+
+
+    // Shuffle the spawn positions indices to prevent actors from spawning in the same position
+    var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
+    var colorRandomIndices = getRandomIndices(actorColors.Length);
+
+    Debug.Log("number of actors: " + numberOfActors);
+    numberOfActors = Mathf.Min(numberOfActors, actorsSpawnPositions.Length);
+    Debug.Log("number of actors after: " + numberOfActors);
+    var actorsPrefabKeys = new List<string>(actorsPrefabs.Keys);
+    for (int i = 0; i < numberOfActors; i++)
+    {
+      // Get a random actor prefab key
+      var actorPrefabKey = actorsPrefabKeys[Random.Range(0, actorsPrefabKeys.Count)];
+
+      GameObject prefabToSpawn = actorsPrefabs[actorPrefabKey];
+      GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
+      string id = $"Character_{i}";
+      spawnedPrefab.name = id;
+      Character character = spawnedPrefab.GetComponent<Character>();
+      if (character)
+      {
+        character.spriteRenderer.color = actorColors[colorRandomIndices[i]];
+        actors.Add(id, character);
+      }
+      else
+      {
+        Debug.LogError($"No character component for {id}");
+        continue;
+      }
+    }
+    timeline.actorsIds = new List<string>(actors.Keys);
+
+
+
+    numberOfCards = Mathf.Min(numberOfCards, cardSprites.Length);
+
+    float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
+    float startX = -(numberOfCards / 2) * cardsSpacing;
+    if (numberOfCards % 2 == 0)
+    {
+      startX += cardsSpacing / 2;
+    }
+
+    int order = 0;
+    timeline.cardIds = new List<string>();
+    for (int i = 0; i < numberOfCards; i++)
+    {
+      timeline.cardIds.Add(cardSprites[i].name);
+      Sprite cardSprite = cardSprites[i];
+
+      float xPos = startX + i * cardsSpacing;
+      Vector3 spawnPos = new Vector3(xPos, cardsLeft.position.y, 0);
+      Card spawnedPrefab = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
+
+      spawnedPrefab.name = cardSprite.name;
+      spawnedPrefab.drawingSpriteRenderer.sprite = cardSprite;
+      spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
+      order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
+    }
+    print("Timeline card count: " + timeline.cardIds.Count);
+
+    // Start the timeline
+    timeline.gameObject.SetActive(true);
+    timeline.StartScript();
+  }
+
   void ChangeScore(int scoreChange)
   {
     score += scoreChange;
     scoreText.text = score.ToString();
     scoreText.GetComponent<Animator>().Play("ScorePop");
-    if (score == -3)
+    if (score <= -3)
     {
       Debug.Log("Game over!");
+      gameOverPanel.SetActive(true);
       timeline.Pause();
     }
   }
@@ -174,6 +244,12 @@ public class GameManager : MonoBehaviour
     if (correct)
     {
       Debug.Log("Correct guess!");
+      string resourcePath = $"{ResourcePaths.CardSprites}/{cardName}";
+      Sprite sprite = Resources.Load<Sprite>(resourcePath);
+      if (sprite)
+      {
+        actor.bubble.Display(sprite);
+      }
       if (score < 3)
       {
         ChangeScore(1);
@@ -181,6 +257,11 @@ public class GameManager : MonoBehaviour
     }
     else
     {
+      Sprite sprite = Resources.Load<Sprite>(ResourcePaths.RedMarkSprite);
+      if (sprite)
+      {
+        actor.bubble.Display(sprite);
+      }
       Debug.Log("Wrong guess!");
       ChangeScore(-1);
     }

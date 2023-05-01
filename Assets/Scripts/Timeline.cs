@@ -17,7 +17,7 @@ public class Timeline : MonoBehaviour
   public event OnObjectMissedDelegate OnObjectMissed;
 
 
-  public Script script;
+  public Script script = null;
   bool paused = false; // whether the timeline is paused
   bool waitingForHint = false; // whether the player should give a hint
   int hintIndex = 0; // the index of the script item that needs a hint
@@ -38,11 +38,13 @@ public class Timeline : MonoBehaviour
   public float hintTimerDuration = 3.0f; // in seconds
   // script speed
   public float scriptSpeed = 1.0f;
+  public float missingProbability = 0.5f; // probability of a card missing
   // start time
   public float initialDelay = 0.0f; // in seconds
 
-  // TODO: Extract list of emoji codes and player IDs from the scrip
-  public string[] cardIds = { "0", "1", "2" };
+  public List<string> actorsIds = new List<string>();
+  public List<string> cardIds = new List<string>();
+
 
   public float bubbleHeadsup = 1.0f;
   private Card cardPrefab;
@@ -50,32 +52,6 @@ public class Timeline : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-    // Create a list with all the emoji codes
-    // Create a list with all actors Ids
-    var actorsIds = new List<string>();
-    actorsIds.Add("Character_0");
-    actorsIds.Add("Character_1");
-    actorsIds.Add("Character_2");
-    // Create a test script with test items
-    script = new Script();
-    script.items = new List<ScriptItem>();
-    script.items.Add(new ScriptItem("1", "Character_1"));
-    script.items.Add(new ScriptItem("2", "Character_2", true));
-    script.items.Add(new ScriptItem("0", "Character_0", false, .5f));
-    script.items.Add(new ScriptItem("1", "Character_1"));
-    script.items.Add(new ScriptItem("2", "Character_2"));
-    for (int i = 0; i < 100; ++i)
-    {
-      // Choose a random emoji code and player ID
-      var cardId = cardIds[Random.Range(0, cardIds.Length)];
-      var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
-      // Get a random isMissing value with a probability of .3 of being true
-      var isMissing = Random.Range(0.0f, 1.0f) < .2f;
-      // Add a new script item
-      script.items.Add(new ScriptItem(cardId, actorId, isMissing));
-    }
-
-    elapsedTime = -initialDelay;
     // Get the timeline width and position
     var sprite = GetComponent<SpriteRenderer>();
     timelineWidth = sprite.bounds.size.x;
@@ -83,9 +59,51 @@ public class Timeline : MonoBehaviour
     cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
   }
 
+  public void CreateScript()
+  {
+    // Create a test script with test items
+    script = new Script();
+    script.items = new List<ScriptItem>();
+    Debug.Log("Creating script with " + cardIds.Count + " cards and " + actorsIds.Count + " actors, with a missing probability of " + missingProbability + ".");
+    for (int i = 0; i < 100; ++i)
+    {
+      // Choose a random emoji code and player ID
+      var cardId = cardIds[Random.Range(0, cardIds.Count)];
+      var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
+      // Get a random isMissing value with a probability of .3 of being true
+      var isMissing = Random.Range(0.0f, 1.0f) < missingProbability;
+      // Add a new script item
+      script.items.Add(new ScriptItem(cardId, actorId, isMissing));
+    }
+
+    elapsedTime = -initialDelay;
+
+    // Reset the fields
+    paused = true; // whether the timeline is paused
+    waitingForHint = false; // whether the player should give a hint
+    hintIndex = 0; // the index of the script item that needs a hint
+    hintTimer = 0.0f; // in seconds
+    elapsedTime = 0.0f; // in seconds, corresponds to the right edge of the timeline
+    firstVisibleIndex = 0;
+    firstVisibleIndexTime = 0.0f; // in seconds
+    lastVisibleIndex = 0;
+    lastVisibleIndexTime = 0.0f; // in seconds
+  }
+
+  public void StartScript()
+  {
+    CreateScript();
+    paused = false;
+  }
+
   // Update is called once per frame
   void Update()
   {
+    if (script == null)
+    {
+      return;
+    }
+
     if (waitingForHint)
     {
       hintTimer -= Time.deltaTime;
@@ -115,6 +133,7 @@ public class Timeline : MonoBehaviour
 
     // Update the visible game objects
     float elementTime = firstVisibleIndexTime;
+    var gameObjectPrefab = Resources.Load<Card>(ResourcePaths.Card);
     for (int i = firstVisibleIndex; i < lastVisibleIndex; ++i)
     {
       var item = script.items[i];
@@ -122,7 +141,7 @@ public class Timeline : MonoBehaviour
       {
         // Create a new game object
         var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
-        var gameObject = Instantiate(cardPrefab);
+        var gameObject = Instantiate(gameObjectPrefab);
 
         Character actor = GameManager.Instance.actors[item.actorId];
         if (actor != null && actor.spriteRenderer != null && gameObject.drawingSpriteRenderer != null) {
