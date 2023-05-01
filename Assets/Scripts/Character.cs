@@ -2,13 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Colors
-// 62A2CD
-// DEE38C
 public class Character : MonoBehaviour
 {
     public string id;
     public Bubble bubble;
+    public SpriteRenderer spriteRenderer;
+
+    void Awake()
+    {
+        SpriteRenderer spriteRen = GetComponent<SpriteRenderer>();
+        if (spriteRen) {
+            spriteRenderer = spriteRen;
+        } else {
+            Debug.LogWarning("No sprite renderer for Character");
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

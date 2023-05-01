@@ -14,6 +14,12 @@ public class GameManager : MonoBehaviour
 
   public Timeline timeline;
   public TMPro.TMP_Text scoreText;
+  public Color[] actorColors = {
+    new Color32(0xDE, 0xE3, 0x8C, 0xFF),
+    new Color32(0xFF, 0x84, 0xED, 0xFF),
+    new Color32(0x83, 0xB0, 0xFF, 0xFF),
+    new Color32(0x91, 0xFF, 0x83, 0xFF)
+  };
 
   // Static reference to the instance of the singleton class
   private static GameManager instance;
@@ -21,6 +27,8 @@ public class GameManager : MonoBehaviour
 
   Dictionary<string, GameObject> actorsPrefabs;
   Dictionary<string, GameObject> cardSprites;
+
+  public Dictionary<string, Character> actors { get; private set;}
 
   // Public getter for the singleton instance
   public static GameManager Instance
@@ -60,6 +68,8 @@ public class GameManager : MonoBehaviour
 
     // Make the game object persist across scenes
     DontDestroyOnLoad(gameObject);
+
+    actors = new Dictionary<string, Character>();
   }
 
 
@@ -82,19 +92,23 @@ public class GameManager : MonoBehaviour
     }
 
     // Shuffle the spawn positions indices to prevent actors from spawning in the same position
-    var randomIndices = getRandomIndices(actorsSpawnPositions.Length);
+    var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
+    var colorRandomIndices = getRandomIndices(actorColors.Length);
 
     for (int i = 0; i < numberOfActors; i++)
     {
       GameObject prefabToSpawn = actorsPrefabs["Character"];
-      GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[randomIndices[i]].position, Quaternion.identity);
+      GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
       string id = $"Character_{i}";
       spawnedPrefab.name = id;
       Character character = spawnedPrefab.GetComponent<Character>();
       if (character) {
         character.id = id;
+        character.spriteRenderer.color = actorColors[colorRandomIndices[i]];
+        actors.Add(id, character);
       } else {
         Debug.LogError($"No character component for {id}");
+        continue;
       }
     }
 
@@ -117,10 +131,11 @@ public class GameManager : MonoBehaviour
         Card spawnedPrefab = Instantiate(cardPrefab, spawnPos, Quaternion.identity);
 
         spawnedPrefab.name = cardSprite.name;
-        spawnedPrefab.spriteRenderer.sprite = cardSprite;
+        spawnedPrefab.drawingSpriteRenderer.sprite = cardSprite;
         spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
         order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
     }
+    timeline.gameObject.SetActive(true);
   }
 
   // Update is called once per frame

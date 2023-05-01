@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class Card : MonoBehaviour
 {
-    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer drawingSpriteRenderer;
+    public SpriteRenderer frameSpriteRenderer;
 }

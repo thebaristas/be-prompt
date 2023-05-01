@@ -210,6 +210,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Timeline
       objectReference: {fileID: 0}
+    - target: {fileID: 2378425606872153863, guid: 254c599880ca545498e3f2920172230d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 254c599880ca545498e3f2920172230d, type: 3}
 --- !u!1 &444707584

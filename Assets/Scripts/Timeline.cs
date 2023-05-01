@@ -119,7 +119,12 @@ public class Timeline : MonoBehaviour
         var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
         var gameObjectPrefab = Resources.Load<Card>(ResourcePaths.Card);
         var gameObject = Instantiate(gameObjectPrefab);
-        gameObject.spriteRenderer.sprite = sprite;
+
+        Character actor = GameManager.Instance.actors[item.actorId];
+        if (actor != null && actor.spriteRenderer != null && gameObject.drawingSpriteRenderer != null) {
+          gameObject.frameSpriteRenderer.color = actor.spriteRenderer.color;
+        }
+        gameObject.drawingSpriteRenderer.sprite = sprite;
         // Set the name of the game object to the index and emoji code
         gameObject.name = i + "_" + item.cardSpriteId;
         // Make sr a child of this game object
