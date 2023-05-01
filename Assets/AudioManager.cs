@@ -6,9 +6,12 @@ using UnityEngine.Audio;
 public struct AudioSnapshotsNames {
     public const string Menu = "Menu";
     public const string A1 = "A1";
+    public const string A2B1 = "A2B1";
     public const string A2 = "A2";
     public const string B1 = "B1";
+    public const string B1B2 = "B1B2";
     public const string B2 = "B2";
+    public const string B2C1 = "B2C1";
     public const string C1 = "C1";
     public const string Silence = "Silence";
 }
