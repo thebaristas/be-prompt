@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     new Color32(0x91, 0xFF, 0x83, 0xFF)
   };
 
-  public LevelManager levelManager {get; private set;}
+  public LevelManager levelManager { get; private set; }
   public int successfulScore = 0;
   public int missedScore = 0;
   public int performanceScore = 0;
@@ -117,9 +117,7 @@ public class GameManager : MonoBehaviour
     timeline.OnTimelineFinished += () =>
     {
       Debug.Log("Timeline finished");
-      timeline.Pause();
-      gameOverPanel.SetActive(true);
-      //   gameOverPanel.GetComponent<Animator>().Play("GameOverPanel");
+      ShowGameOverPanel();
     };
 
     timeline.OnObjectMissed += () =>
@@ -192,19 +190,30 @@ public class GameManager : MonoBehaviour
   void ChangeScore(int scoreChange)
   {
     performanceScore = Mathf.Min(performanceScore + scoreChange, 3);
-    if (scoreChange > 0) {
+    if (scoreChange > 0)
+    {
       successfulScore += scoreChange;
       scoreText.text = successfulScore.ToString();
       scoreText.GetComponent<Animator>().Play("ScorePop");
-    } else {
+    }
+    else
+    {
       missedScore += scoreChange;
     }
     if (performanceScore <= -3)
     {
       Debug.Log("Game over!");
-      gameOverPanel.SetActive(true);
-      timeline.Pause();
+      ShowGameOverPanel();
     }
+  }
+
+  void ShowGameOverPanel()
+  {
+    timeline.Pause();
+    gameOverPanel.SetActive(true);
+    GameObject.Find("CriticTitle").GetComponent<TMPro.TMP_Text>().text = $"Excellent";
+    GameObject.Find("CriticReview").GetComponent<TMPro.TMP_Text>().text = $"Blah blah blah";
+    GameObject.Find("Stats").GetComponent<TMPro.TMP_Text>().text = $"Correct hints: {successfulScore} / {successfulScore + missedScore} ({100.0f * successfulScore / (successfulScore + missedScore)}%)";
   }
 
   void OnCardDrop(GameObject dropped, Character actor)
