@@ -17,6 +17,9 @@ public class MainMenu : MonoBehaviour
     {
         // Load all LevelData scriptable objects in the Resources folder
         levelParameters = new List<LevelParameters>(Resources.LoadAll<LevelParameters>(""));
+        levelParameters.Sort((LevelParameters lp1, LevelParameters lp2) => {
+            return lp1.difficulty.CompareTo(lp2.difficulty);
+        });
 
         Debug.Log(levelParameters.ToArray().Length);
         // Create a button for each LevelData object and add it to the level select panel

@@ -17,3 +17,5 @@ MonoBehaviour:
   scriptSpeed: 0.7
   missingProbability: 0.5
   hintTimerDuration: 4
+  scriptLength: 5
+  difficulty: 0
