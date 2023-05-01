@@ -1280,7 +1280,29 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Game Over
+  m_text: 'Game Over
+
+
+    "The performance was worse than the Black Plague. Avoid
+    at all costs!"
+
+    "The actors seemed like they would rather be jousting. Not
+    a good show."
+
+    "The stage design was the only thing that wasn''t medieval
+    about this performance. A complete miss."
+
+    "The plot was more convoluted
+    than the feudal system. A bit of a headache."
+
+    "The performance had more
+    humor than a court jester. A fun evening out."
+
+    "The actors brought more
+    passion than a crusade. A very enjoyable show."
+
+    "The performance was better
+    than the discovery of the printing press. A must-see!"'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

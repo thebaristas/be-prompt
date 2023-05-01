@@ -8,4 +8,5 @@ public class LevelParameters : ScriptableObject
     public float scriptSpeed;
     public float missingProbability;
     public float hintTimerDuration = 3.0f; // in seconds
+    public int difficulty;
 }

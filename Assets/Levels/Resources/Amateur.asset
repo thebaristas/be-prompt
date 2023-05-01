@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a0948987e0304199be11daec9245870, type: 3}
-  m_Name: Tutorial
+  m_Name: Amateur
   m_EditorClassIdentifier: 
   actorsCount: 1
-  cardsCount: 1
-  scriptSpeed: 1
+  cardsCount: 2
+  scriptSpeed: 0.7
   missingProbability: 0.5
+  hintTimerDuration: 4
