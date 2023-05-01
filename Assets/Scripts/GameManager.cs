@@ -29,8 +29,7 @@ public class GameManager : MonoBehaviour
   private int score = 0;
   Card cardPrefab;
   Sprite[] cardSprites;
-
-  Dictionary<string, GameObject> actorsPrefabs;
+  Character[] actorsPrefabs;
   public GameObject gameOverPanel;
 
   public Dictionary<string, Character> actors { get; private set; }
@@ -82,15 +81,7 @@ public class GameManager : MonoBehaviour
   void Start()
   {
     Debug.Log("GameManager started");
-    actorsPrefabs = new Dictionary<string, GameObject>();
-    // Get the contents of the Resources/Actors folder
-    foreach (var file in new DirectoryInfo("Assets/Prefabs/Resources/Actors").GetFiles("*.prefab"))
-    {
-      // Load the actor prefab
-      var actorPrefab = Resources.Load<GameObject>($"{ResourcePaths.Actors}/" + file.Name.Replace(".prefab", ""));
-      // Add the actor prefab to the list of actors prefabs
-      actorsPrefabs.Add(file.Name.Replace(".prefab", ""), actorPrefab);
-    }
+    actorsPrefabs = Resources.LoadAll<Character>(ResourcePaths.Actors);
     cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
     cardSprites = Resources.LoadAll<Sprite>(ResourcePaths.CardSprites);
     ResetGame();
@@ -159,17 +150,12 @@ public class GameManager : MonoBehaviour
     Debug.Log("number of actors: " + numberOfActors);
     numberOfActors = Mathf.Min(numberOfActors, actorsSpawnPositions.Length);
     Debug.Log("number of actors after: " + numberOfActors);
-    var actorsPrefabKeys = new List<string>(actorsPrefabs.Keys);
     for (int i = 0; i < numberOfActors; i++)
     {
-      // Get a random actor prefab key
-      var actorPrefabKey = actorsPrefabKeys[Random.Range(0, actorsPrefabKeys.Count)];
-
-      GameObject prefabToSpawn = actorsPrefabs[actorPrefabKey];
-      GameObject spawnedPrefab = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
+      Character prefabToSpawn = actorsPrefabs[Random.Range(0, actorsPrefabs.Length)];
+      Character character = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
       string id = $"Character_{i}";
-      spawnedPrefab.name = id;
-      Character character = spawnedPrefab.GetComponent<Character>();
+      character.name = id;
       if (character)
       {
         character.spriteRenderer.color = actorColors[colorRandomIndices[i]];

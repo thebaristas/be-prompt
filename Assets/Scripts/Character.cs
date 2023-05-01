@@ -7,7 +7,8 @@ public class Character : MonoBehaviour
     public Bubble bubble;
     public SpriteRenderer spriteRenderer;
     public Animator animator;
-    public GameManager gameManager;
+    public float animatorBlend;
+    private GameManager gameManager;
 
     void Awake()
     {
@@ -20,6 +21,7 @@ public class Character : MonoBehaviour
         Animator anim = GetComponent<Animator>();
         if (anim) {
             animator = anim;
+            animator.SetFloat(AnimatorParamsName.Blend, animatorBlend);
         } else {
             Debug.LogWarning("No animator for Character");
         }
@@ -39,24 +41,24 @@ public class Character : MonoBehaviour
         string resourcePath;
         if (correct) {
             resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
-            trigger = AnimatorTriggerName.Talk;
+            trigger = AnimatorParamsName.Talk;
         } else {
             resourcePath = ResourcePaths.RedMarkSprite;
-            trigger = AnimatorTriggerName.Idle;
+            trigger = AnimatorParamsName.Idle;
         }
         Animate(trigger, resourcePath);
     }
 
     public void HandleCardDisplay(string actorId, string cardSpriteId, bool isMissing) {
         if (actorId != name) {
-            animator.SetTrigger(AnimatorTriggerName.Idle);
+            animator.SetTrigger(AnimatorParamsName.Idle);
             bubble.Display();
         } else {
             string resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
-            string trigger = AnimatorTriggerName.Talk;
+            string trigger = AnimatorParamsName.Talk;
             if (isMissing) {
                 resourcePath = ResourcePaths.QuestionMarkSprite;
-                trigger = AnimatorTriggerName.Embarrassed;
+                trigger = AnimatorParamsName.Embarrassed;
             }
             Animate(trigger, resourcePath);
         }

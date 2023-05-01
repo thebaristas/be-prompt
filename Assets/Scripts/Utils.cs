@@ -6,8 +6,9 @@ public struct ResourcePaths {
     public const string Actors = "Actors";
 }
 
-public struct AnimatorTriggerName {
+public struct AnimatorParamsName {
     public const string Idle = "Idle";
     public const string Talk = "Talk";
     public const string Embarrassed = "Embarrassed";
+    public const string Blend = "Blend";
 }
