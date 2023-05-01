@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
     void Awake()
     {
         SpriteRenderer spriteRen = GetComponent<SpriteRenderer>();
+        spriteRen.material.SetFloat("_OutlineEnabled", 0);
         if (spriteRen) {
             spriteRenderer = spriteRen;
         } else {
