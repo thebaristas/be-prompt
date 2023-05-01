@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
     }
 
     public void HandleCardDisplay(string actorId, string cardSpriteId, bool isMissing) {
-        if (actorId != id) {
+        if (actorId != name) {
             bubble.Hide();
         } else {
             string resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
