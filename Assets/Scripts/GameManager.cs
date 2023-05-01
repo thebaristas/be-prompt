@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.IO;
-// 44 38 2b
 
 public class GameManager : MonoBehaviour
 {
@@ -23,8 +22,6 @@ public class GameManager : MonoBehaviour
     new Color32(0x91, 0xFF, 0x83, 0xFF)
   };
 
-//   // Static reference to the instance of the singleton class
-//   private static GameManager instance;
   private static LevelManager levelManager;
   private int score = 0;
   Card cardPrefab;
@@ -34,45 +31,8 @@ public class GameManager : MonoBehaviour
 
   public Dictionary<string, Character> actors { get; private set; }
 
-//   // Public getter for the singleton instance
-//   public static GameManager Instance
-//   {
-//     get
-//     {
-//       // If the instance hasn't been set yet, try to find it in the scene
-//       if (instance == null)
-//       {
-//         instance = FindObjectOfType<GameManager>();
-
-//         // If the instance still hasn't been set, log an error message
-//         if (instance == null)
-//         {
-//           Debug.LogError("No instance of GameManager found in the scene!");
-//         }
-//       }
-
-//       return instance;
-//     }
-//   }
-
-//   // Private constructor to prevent direct instantiation of the class
-//   private GameManager() { }
-
   void Awake()
   {
-    // // If there is already an instance of the class, destroy the new one
-    // if (instance != null && instance != this)
-    // {
-    //   Destroy(gameObject);
-    //   return;
-    // }
-
-    // // Otherwise, set the instance to this object
-    // instance = this;
-
-    // // Make the game object persist across scenes
-    // DontDestroyOnLoad(gameObject);
-
     actors = new Dictionary<string, Character>();
   }
 
@@ -85,6 +45,19 @@ public class GameManager : MonoBehaviour
     cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
     cardSprites = Resources.LoadAll<Sprite>(ResourcePaths.CardSprites);
     ResetGame();
+    var lc = GameObject.Find("LeftCurtain");
+    lc.GetComponent<Animator>().Play("OpenCurtains");
+    GameObject.Find("RightCurtain").GetComponent<Animator>().Play("OpenRightCurtain");
+    // Trigger event when animation is finished
+    lc.GetComponent<CurtainListener>().OnCurtainStateChanged += (state) =>
+    {
+      if (state == "opened")
+      {
+        // Start the script
+        Debug.Log("Starting script...");
+        timeline.Unpause();
+      }
+    };
   }
 
   // Update is called once per frame
@@ -200,7 +173,7 @@ public class GameManager : MonoBehaviour
 
     // Start the timeline
     timeline.gameObject.SetActive(true);
-    timeline.StartScript();
+    timeline.CreateScript();
   }
 
   void ChangeScore(int scoreChange)

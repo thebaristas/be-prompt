@@ -15,9 +15,5 @@ public class LevelManager : MonoBehaviour
         Debug.Log($"loading scene {scene}");
         levelParams = levelParameters;
         SceneManager.LoadScene(scene);
-        // if (GameManager.Instance != null) {
-        //     Debug.Log("GameManager exists, resetting game");
-        //     GameManager.Instance.ResetGame();
-        // }
     }
 }
