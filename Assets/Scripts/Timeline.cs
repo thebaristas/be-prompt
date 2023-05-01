@@ -126,7 +126,7 @@ public class Timeline : MonoBehaviour
       }
     }
 
-    if (!paused)
+    if (!paused && !waitingForHint)
     {
       // Update the elapsed time
       elapsedTime += scriptSpeed * Time.deltaTime;
@@ -189,7 +189,6 @@ public class Timeline : MonoBehaviour
       }
       else if (!waitingForHint && item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
       {
-        paused = true;
         hintIndex = i;
         waitingForHint = true;
         hintTimer = hintTimerDuration;
@@ -231,7 +230,6 @@ public class Timeline : MonoBehaviour
   {
     if (waitingForHint)
     {
-      paused = false;
       waitingForHint = false;
       script.items[hintIndex].isMissing = false;
     }
