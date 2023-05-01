@@ -65,7 +65,9 @@ public class GameManager : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-
+    // Lerp the anchor position of the newspaper to the 0, 0
+    var newspaper = GameObject.Find("Newspaper").GetComponent<RectTransform>();
+    newspaper.anchoredPosition = Vector2.Lerp(newspaper.anchoredPosition, Vector2.zero, 0.1f);
   }
 
   public void ResetGame()
@@ -185,16 +187,16 @@ public class GameManager : MonoBehaviour
     // Start the timeline
     timeline.gameObject.SetActive(true);
     timeline.CreateScript();
+    gameOverPanel.SetActive(false);
   }
 
   void ChangeScore(int scoreChange)
   {
-    performanceScore = Mathf.Min(performanceScore + scoreChange, 3);
+    performanceScore = Mathf.Max(Mathf.Min(performanceScore + scoreChange, 3), -3);
     if (scoreChange > 0)
     {
       successfulScore += scoreChange;
       scoreText.text = successfulScore.ToString();
-      scoreText.GetComponent<Animator>().Play("ScorePop");
     }
     else
     {
@@ -211,9 +213,68 @@ public class GameManager : MonoBehaviour
   {
     timeline.Pause();
     gameOverPanel.SetActive(true);
-    GameObject.Find("CriticTitle").GetComponent<TMPro.TMP_Text>().text = $"Excellent";
-    GameObject.Find("CriticReview").GetComponent<TMPro.TMP_Text>().text = $"Blah blah blah";
-    GameObject.Find("Stats").GetComponent<TMPro.TMP_Text>().text = $"Correct hints: {successfulScore} / {successfulScore + missedScore} ({100.0f * successfulScore / (successfulScore + missedScore)}%)";
+    var resultLevel = getLevel();
+    GameObject.Find("CriticTitle").GetComponent<TMPro.TMP_Text>().text = $"{getTitle(resultLevel)}";
+    GameObject.Find("CriticReview").GetComponent<TMPro.TMP_Text>().text = $"{getCriticReview(resultLevel)}\n- {randomCriticName()}";
+    GameObject.Find("Stats").GetComponent<TMPro.TMP_Text>().text = $"Correct hints: {successfulScore} / {successfulScore - missedScore} ({100.0f * successfulScore / (successfulScore - missedScore)}%)";
+    GameObject.Find("Newspaper").GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1000);
+  }
+
+  string randomCriticName() {
+    var names = new List<string>();
+    names.Add("The Drama Lama");
+    names.Add("The Stage Sage");
+    names.Add("The Bard Basher");
+    names.Add("The Curtain Crusader");
+    names.Add("The Performance Predator");
+    names.Add("The Theater Terrorizer");
+    names.Add("The Play Pundit");
+    names.Add("The Comedy Censor");
+    names.Add("The Tragic Takedown");
+    names.Add("The Satirical Sniper");
+    names.Add("The Musical Mauler");
+    names.Add("The Shakespeare Shredder");
+    names.Add("The Improv Inspector");
+    names.Add("The Act Analysis Addict");
+    names.Add("The Showdown Showoff");
+    return names[Random.Range(0, names.Count)];
+  }
+
+  string getTitle(int score)
+  {
+    if (score == 0) return "Terrible";
+    if (score == 1) return "Bad";
+    if (score == 2) return "Poor";
+    if (score == 3) return "Fair";
+    if (score == 4) return "Good";
+    if (score == 5) return "Great";
+    return "Excellent";
+  }
+
+  string getCriticReview(int score)
+  {
+    var lines = new List<string>();
+    lines.Add("The performance was worse than the Black Plague. Avoid at all costs!");
+    lines.Add("The actors seemed like they would rather be jousting. Not a good show.");
+    lines.Add("The stage design was the only thing that wasn't medieval about this performance. A complete miss.");
+    lines.Add("The plot was more convoluted than the feudal system. A bit of a headache.");
+    lines.Add("The performance had more humor than a court jester. A fun evening out.");
+    lines.Add("The actors brought more passion than a crusade. A very enjoyable show.");
+    lines.Add("The performance was better than the discovery of the printing press. A must-see!");
+    return lines[score];
+  }
+
+  int getLevel()
+  {
+    if (performanceScore <= -3) return 0;
+    var percentage = 1.0f * successfulScore / (successfulScore - missedScore);
+    if (percentage < 0.4) return 0;
+    if (percentage < 0.5) return 1;
+    if (percentage < 0.6) return 2;
+    if (percentage < 0.7) return 3;
+    if (percentage < 0.8) return 4;
+    if (percentage < 0.9) return 5;
+    return 6;
   }
 
   void OnCardDrop(GameObject dropped, Character actor)
