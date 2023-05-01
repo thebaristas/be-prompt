@@ -160,7 +160,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.26666668, g: 0.21960784, b: 0.16862746, a: 1}
+  m_Color: {r: 0.46226418, g: 0.4337957, b: 0.40295482, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -188,3 +188,8 @@ MonoBehaviour:
   hintTimerDuration: 3
   scriptSpeed: 1
   initialDelay: 0
+  cardIds:
+  - 0
+  - 1
+  - 2
+  bubbleHeadsup: 0.2

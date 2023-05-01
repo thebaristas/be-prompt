@@ -43,6 +43,8 @@ public class Timeline : MonoBehaviour
   // TODO: Extract list of emoji codes and player IDs from the scrip
   public string[] cardIds = { "0", "1", "2" };
 
+  public float bubbleHeadsup = 1.0f;
+
   // Start is called before the first frame update
   void Start()
   {
@@ -135,18 +137,17 @@ public class Timeline : MonoBehaviour
       }
       var obj = elementToGameObject[i];
       obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
-      if (elementTime < elapsedTime - timelineTotalDuration / 2.0f)
+      if (elementTime < elapsedTime - timelineTotalDuration / 2.0f + bubbleHeadsup && !item.displayed)
       {
-        if (!item.displayed) {
-          OnCardDisplay.Invoke(item.actorId, item.cardSpriteId, item.isMissing);
-          item.displayed = true;
-        }
-        if (!waitingForHint && item.isMissing) {
-          paused = true;
-          hintIndex = i;
-          waitingForHint = true;
-          hintTimer = hintTimerDuration;
-        }
+        OnCardDisplay.Invoke(item.actorId, item.cardSpriteId, item.isMissing);
+        item.displayed = true;
+      }
+      else if (!waitingForHint && item.isMissing && elementTime < elapsedTime - timelineTotalDuration / 2.0f)
+      {
+        paused = true;
+        hintIndex = i;
+        waitingForHint = true;
+        hintTimer = hintTimerDuration;
       }
       elementTime += item.delay;
     }

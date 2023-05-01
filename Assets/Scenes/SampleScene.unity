@@ -142,22 +142,6 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.46226418
       objectReference: {fileID: 0}
-    - target: {fileID: 2378425606872153856, guid: 254c599880ca545498e3f2920172230d, type: 3}
-      propertyPath: m_Color.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378425606872153856, guid: 254c599880ca545498e3f2920172230d, type: 3}
-      propertyPath: m_Color.b
-      value: 0.40295482
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378425606872153856, guid: 254c599880ca545498e3f2920172230d, type: 3}
-      propertyPath: m_Color.g
-      value: 0.4337957
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378425606872153856, guid: 254c599880ca545498e3f2920172230d, type: 3}
-      propertyPath: m_Color.r
-      value: 0.46226418
-      objectReference: {fileID: 0}
     - target: {fileID: 2378425606872153857, guid: 254c599880ca545498e3f2920172230d, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -200,10 +184,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2378425606872153857, guid: 254c599880ca545498e3f2920172230d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2378425606872153858, guid: 254c599880ca545498e3f2920172230d, type: 3}
-      propertyPath: script.items.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2378425606872153863, guid: 254c599880ca545498e3f2920172230d, type: 3}
