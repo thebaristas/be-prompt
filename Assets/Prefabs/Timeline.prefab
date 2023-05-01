@@ -159,7 +159,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 96e6152c28d4e47ffadb21a9b8e7c9ff, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1710ca4745f14b589dca64f40d17c48, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -189,6 +189,7 @@ MonoBehaviour:
   timelineTotalDuration: 5
   hintTimerDuration: 3
   scriptSpeed: 1
+  scriptLength: 20
   missingProbability: 0.5
   initialDelay: 0
   actorsIds: []
