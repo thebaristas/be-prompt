@@ -62,7 +62,6 @@ public class GameManager : MonoBehaviour
       }
     };
     audioManager = FindObjectOfType<AudioManager>();
-    audioManager.TransitionSnapshots(AudioSnapshotsNames.A2, 0.1f);
   }
 
   // Update is called once per frame
