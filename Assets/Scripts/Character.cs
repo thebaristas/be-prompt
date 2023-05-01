@@ -24,18 +24,17 @@ public class Character : MonoBehaviour
         GameManager.Instance.SubscribeToCardDisplayEvents(HandleCardDisplay);
     }
 
-    public void OnDrop(GameObject gameObject) {
-        Debug.Log($"Dropped on character {gameObject.name}");
-    }
-
     public void HandleCardDisplay(string actorId, string cardSpriteId, bool isMissing) {
         if (actorId != id) {
             bubble.Hide();
         } else {
+            string resourcePath = $"{ResourcePaths.CardSprites}/{cardSpriteId}";
             if (isMissing) {
-                bubble.Display(ResourcePaths.QuestionMarkSprite);
-            } else {
-                bubble.Display($"{ResourcePaths.CardSprites}/{cardSpriteId}");
+                resourcePath = ResourcePaths.QuestionMarkSprite;
+            }
+            Sprite sprite = Resources.Load<Sprite>(resourcePath);
+            if (sprite) {
+                bubble.Display(sprite);
             }
         }
     }
