@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
   public int successfulScore = 0;
   public int missedScore = 0;
   public int performanceScore = 0;
+  public int CrowdFeedbackFrequency = 5;
   Card cardPrefab;
   Sprite[] cardSprites;
   Character[] actorsPrefabs;
@@ -133,6 +134,10 @@ public class GameManager : MonoBehaviour
     {
       Debug.Log("Hint missed!");
       ChangeScore(-1);
+      bool playSound = Random.Range(0, 10) < 1;
+      if (playSound) {
+        AudioManager.Instance.PlayClip(AudioClipNames.M_boooh);
+      }
     };
 
 
@@ -224,6 +229,11 @@ public class GameManager : MonoBehaviour
     timeline.Pause();
     gameOverPanel.SetActive(true);
     var resultLevel = getLevel();
+    if (resultLevel < 3) {
+      AudioManager.Instance.PlayClip(AudioClipNames.M_boooh);
+    } else {
+      AudioManager.Instance.PlayClip(AudioClipNames.M_Applause);
+    }
     GameObject.Find("CriticTitle").GetComponent<TMPro.TMP_Text>().text = $"{getTitle(resultLevel)}";
     GameObject.Find("CriticReview").GetComponent<TMPro.TMP_Text>().text = $"{getCriticReview(resultLevel)}\n- {randomCriticName()}";
     GameObject.Find("Stats").GetComponent<TMPro.TMP_Text>().text = $"Correct hints: {successfulScore} / {successfulScore - missedScore} ({100.0f * successfulScore / (successfulScore - missedScore)}%)";
@@ -299,6 +309,7 @@ public class GameManager : MonoBehaviour
     // Check if we need to drop a card on the timeline
     bool correct = timeline.GetWaitingHintCardId() == cardName &&
             timeline.GetWaitingHintActorId() == actorName;
+    bool playSound = Random.Range(0, 10) < 1;
     if (correct)
     {
       Debug.Log("Correct guess!");
@@ -309,6 +320,9 @@ public class GameManager : MonoBehaviour
         actor.bubble.Display(sprite);
       }
       ChangeScore(1);
+      if (playSound) {
+        AudioManager.Instance.PlayClip(AudioClipNames.M_Aaah);
+      }
     }
     else
     {
@@ -319,6 +333,9 @@ public class GameManager : MonoBehaviour
       }
       Debug.Log("Wrong guess!");
       ChangeScore(-1);
+      if (playSound) {
+        AudioManager.Instance.PlayClip(AudioClipNames.M_boooh);
+      }
     }
     actor.HandleCardDrop(correct, cardName);
     timeline.StopWaitingForHint();
