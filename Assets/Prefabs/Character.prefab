@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: c7c2020b8c6dc4b609b5482b0bcc6cb5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.9019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -318,6 +318,7 @@ MonoBehaviour:
   bubble: {fileID: 4552205117713500781}
   spriteRenderer: {fileID: 0}
   animator: {fileID: 0}
+  animatorBlend: 0
 --- !u!70 &1163817635889975799
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
