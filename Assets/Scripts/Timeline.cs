@@ -43,6 +43,7 @@ public class Timeline : MonoBehaviour
   public float hintTimerDuration = 3.0f; // in seconds
   // script speed
   public float scriptSpeed = 1.0f;
+  public int playableCardsCount;
   public int scriptLength = 20;
   public float missingProbability = 0.5f; // probability of a card missing
   // start time
@@ -73,14 +74,16 @@ public class Timeline : MonoBehaviour
     // Create a test script with test items
     script = new Script();
     script.items = new List<ScriptItem>();
+    playableCardsCount = Mathf.Min(playableCardsCount, cardIds.Count);
     Debug.Log("Creating script with " + cardIds.Count + " cards and " + actorsIds.Count + " actors, with a missing probability of " + missingProbability + ".");
     for (int i = 0; i < scriptLength; ++i)
     {
-      // Choose a random emoji code and player ID
-      var cardId = cardIds[Random.Range(0, cardIds.Count)];
-      var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
       // Get a random isMissing value with a probability of .3 of being true
       var isMissing = Random.Range(0.0f, 1.0f) < missingProbability;
+      // Choose a random index between 0 and playableCardsCount - 1 if the card is missing, or between playableCardsCount and cardIds.Count - 1 otherwise
+      var cardId = cardIds[Random.Range(isMissing ? 0 : playableCardsCount, isMissing ? playableCardsCount : cardIds.Count)];
+      // Choose a random actor ID
+      var actorId = actorsIds[Random.Range(0, actorsIds.Count)];
       // Add a new script item
       script.items.Add(new ScriptItem(cardId, actorId, isMissing));
     }
@@ -155,10 +158,18 @@ public class Timeline : MonoBehaviour
         // Create a new game object
         var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
         var gameObject = Instantiate(gameObjectPrefab);
+        var dnd = gameObject.GetComponent<DragAndDrop>();
+        if (dnd != null) {
+          Destroy(dnd);
+        }
 
         Character actor = gameManager.actors[item.actorId];
         if (actor != null && actor.spriteRenderer != null && gameObject.drawingSpriteRenderer != null) {
-          gameObject.frameSpriteRenderer.color = actor.spriteRenderer.color;
+          if (!item.isMissing) {
+            gameObject.frameSpriteRenderer.color = Color.white;
+          } else {
+            gameObject.frameSpriteRenderer.color = actor.spriteRenderer.color;
+          }
         }
         gameObject.drawingSpriteRenderer.sprite = sprite;
         // Set the name of the game object to the index and emoji code

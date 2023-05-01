@@ -107,6 +107,7 @@ public class GameManager : MonoBehaviour
       timeline.scriptSpeed = lp.scriptSpeed;
       timeline.missingProbability = lp.missingProbability;
       timeline.hintTimerDuration = lp.hintTimerDuration;
+      timeline.playableCardsCount = lp.playableCardsCount;
       timeline.scriptLength = lp.scriptLength;
       numberOfActors = lp.actorsCount;
       numberOfCards = lp.cardsCount;
@@ -130,15 +131,17 @@ public class GameManager : MonoBehaviour
 
 
     // Shuffle the spawn positions indices to prevent actors from spawning in the same position
-    var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
-    var colorRandomIndices = getRandomIndices(actorColors.Length);
+    // var positionRandomIndices = getRandomIndices(actorsSpawnPositions.Length);
+    var positionRandomIndices = new int[] {1, 2, 0, 3};
+    var colorRandomIndices = new int[] {0, 1, 2, 3};
+    var actorPrefabIds = new int[] {0, 1, 0, 1};
 
     Debug.Log("number of actors: " + numberOfActors);
     numberOfActors = Mathf.Min(numberOfActors, actorsSpawnPositions.Length);
     Debug.Log("number of actors after: " + numberOfActors);
     for (int i = 0; i < numberOfActors; i++)
     {
-      Character prefabToSpawn = actorsPrefabs[Random.Range(0, actorsPrefabs.Length)];
+      Character prefabToSpawn = actorsPrefabs[actorPrefabIds[i]];
       Character character = Instantiate(prefabToSpawn, actorsSpawnPositions[positionRandomIndices[i]].position, Quaternion.identity);
       string id = $"Character_{i}";
       character.name = id;
@@ -155,13 +158,11 @@ public class GameManager : MonoBehaviour
     }
     timeline.actorsIds = new List<string>(actors.Keys);
 
-
-
     numberOfCards = Mathf.Min(numberOfCards, cardSprites.Length);
 
-    float cardsSpacing = (cardsRight.position - cardsLeft.position).x / numberOfCards;
-    float startX = -(numberOfCards / 2) * cardsSpacing;
-    if (numberOfCards % 2 == 0)
+    float cardsSpacing = (cardsRight.position - cardsLeft.position).x / timeline.playableCardsCount;
+    float startX = -(timeline.playableCardsCount / 2) * cardsSpacing;
+    if (timeline.playableCardsCount % 2 == 0)
     {
       startX += cardsSpacing / 2;
     }
@@ -171,6 +172,10 @@ public class GameManager : MonoBehaviour
     for (int i = 0; i < numberOfCards; i++)
     {
       timeline.cardIds.Add(cardSprites[i].name);
+    }
+
+    for (int i = 0; i < timeline.playableCardsCount; i++)
+    {
       Sprite cardSprite = cardSprites[i];
 
       float xPos = startX + i * cardsSpacing;
@@ -182,7 +187,6 @@ public class GameManager : MonoBehaviour
       spawnedPrefab.GetComponent<DragAndDrop>().OnDropEvent += OnCardDrop;
       order = SetLayerRecursively(spawnedPrefab.gameObject, "UI", order);
     }
-    print("Timeline card count: " + timeline.cardIds.Count);
 
     // Start the timeline
     timeline.gameObject.SetActive(true);

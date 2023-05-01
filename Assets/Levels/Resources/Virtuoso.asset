@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorsCount: 3
   cardsCount: 6
+  playableCardsCount: 3
   scriptSpeed: 2
   missingProbability: 0.7
   hintTimerDuration: 2
