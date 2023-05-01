@@ -29,6 +29,7 @@ public class Timeline : MonoBehaviour
   float firstVisibleIndexTime = 0.0f; // in seconds
   int lastVisibleIndex = 0;
   float lastVisibleIndexTime = 0.0f; // in seconds
+  public float cardOffset = 0.5f;
 
   // Dictionary from element ID to game object, to track which game objects are currently visible.
   Dictionary<int, Card> elementToGameObject = new Dictionary<int, Card>();
@@ -44,6 +45,7 @@ public class Timeline : MonoBehaviour
   public string[] cardIds = { "0", "1", "2" };
 
   public float bubbleHeadsup = 1.0f;
+  private Card cardPrefab;
 
   // Start is called before the first frame update
   void Start()
@@ -78,6 +80,7 @@ public class Timeline : MonoBehaviour
     var sprite = GetComponent<SpriteRenderer>();
     timelineWidth = sprite.bounds.size.x;
     timelinePositionX = sprite.bounds.center.x - timelineWidth / 2.0f;
+    cardPrefab = Resources.Load<Card>(ResourcePaths.Card);
   }
 
   // Update is called once per frame
@@ -119,8 +122,7 @@ public class Timeline : MonoBehaviour
       {
         // Create a new game object
         var sprite = Resources.Load<Sprite>($"{ResourcePaths.CardSprites}/{item.cardSpriteId}");
-        var gameObjectPrefab = Resources.Load<Card>(ResourcePaths.Card);
-        var gameObject = Instantiate(gameObjectPrefab);
+        var gameObject = Instantiate(cardPrefab);
 
         Character actor = GameManager.Instance.actors[item.actorId];
         if (actor != null && actor.spriteRenderer != null && gameObject.drawingSpriteRenderer != null) {
@@ -136,7 +138,7 @@ public class Timeline : MonoBehaviour
         gameObject.transform.localScale /= 2.0f;
       }
       var obj = elementToGameObject[i];
-      obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f);
+      obj.transform.position = transform.position + new Vector3(GetTimelinePosition(elementTime), 0.0f, 0.0f) + new Vector3(0, cardOffset, 0);
       if (elementTime < elapsedTime - timelineTotalDuration / 2.0f + bubbleHeadsup && !item.displayed)
       {
         OnCardDisplay.Invoke(item.actorId, item.cardSpriteId, item.isMissing);
